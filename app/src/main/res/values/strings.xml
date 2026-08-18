@@ -8,6 +8,11 @@
     <string name="nav_topics">Topics</string>
     <string name="nav_progress">Progress</string>
 
+    <!-- Bank size is formatted from the loaded bank, never hardcoded: the design
+         quotes "501" in two places and that would go stale silently. -->
+    <string name="search_hint">Search %1$d questions</string>
+    <string name="bank_downloaded_sub">%1$d questions · works offline</string>
+
     <!-- Notification channel -->
     <string name="channel_reminders">Study reminders</string>
     <string name="channel_reminders_desc">Daily nudges, streak warnings and test-date countdowns.</string>
