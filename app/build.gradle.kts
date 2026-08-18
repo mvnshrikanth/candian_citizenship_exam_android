@@ -68,5 +68,11 @@ dependencies {
     androidTestImplementation(libs.espresso.accessibility)
     androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.work.testing)
-    debugImplementation(libs.fragment.testing)
+    // Pinned explicitly: androidx.fragment:fragment-testing publishes STRICT constraints
+    // that hold androidx.test:monitor at 1.6.0, but Espresso 3.6.1 needs 1.7.1 for
+    // androidx.test.platform.concurrent.DirectExecutor. Nothing here uses
+    // FragmentScenario, so the dependency is dropped rather than force-resolved.
+    androidTestImplementation(libs.test.core)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.test.monitor)
 }

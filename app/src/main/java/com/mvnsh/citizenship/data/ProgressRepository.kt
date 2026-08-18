@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mvnsh.citizenship.data.model.ProgressState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,19 +47,33 @@ class ProgressRepository(
     @Volatile
     private var lastPersisted: ProgressState? = null
 
+    /**
+     * The initial read, kept as a Job so writers can join it.
+     *
+     * Without that join, a [replace] issued before the read completes is silently
+     * clobbered when the read lands and assigns the older on-disk value.
+     */
+    private val loadJob: Job = scope.launch {
+        val initial = ProgressState.decode(dataStore.data.map { it[key] }.first())
+        lastPersisted = initial
+        _state.value = initial
+        _loaded.value = true
+    }
+
     init {
         scope.launch {
-            val initial = ProgressState.decode(dataStore.data.map { it[key] }.first())
-            lastPersisted = initial
-            _state.value = initial
-            _loaded.value = true
+            loadJob.join()
             _state.debounce(WRITE_DEBOUNCE_MS).collect { current ->
                 if (current != lastPersisted) persist(current)
             }
         }
     }
 
-    /** Updates memory immediately; the file write lands within the debounce window. */
+    /**
+     * Updates memory immediately; the file write lands within the debounce window.
+     * Only call once [loaded] is true - every caller is user-driven, so by then the
+     * initial read has long finished.
+     */
     fun mutate(transform: (ProgressState) -> ProgressState) {
         _state.value = transform(_state.value)
     }
@@ -68,13 +83,14 @@ class ProgressRepository(
 
     /** Replaces everything at once (reset, demo seed) and writes immediately. */
     suspend fun replace(next: ProgressState) {
+        loadJob.join()
         _state.value = next
         persist(next)
     }
 
     /** Suspends until the first read from disk has completed. */
     suspend fun awaitLoaded(): ProgressState {
-        _loaded.first { it }
+        loadJob.join()
         return _state.value
     }
 

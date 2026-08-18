@@ -37,4 +37,12 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_badge</item>
     </style>
+
+    <!-- The design's selected-tab pill. -->
+    <style name="NavActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/md_primary_container</item>
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Pill</item>
+    </style>
 </resources>

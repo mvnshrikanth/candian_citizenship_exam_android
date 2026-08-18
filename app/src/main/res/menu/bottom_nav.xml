@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ids match the four top-level nav destinations so setupWithNavController wires
+     them automatically. Renaming one here means renaming it in nav_graph.xml too. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_nav_home"
+        android:title="@string/nav_home" />
+    <item
+        android:id="@+id/practiceFragment"
+        android:icon="@drawable/ic_list"
+        android:title="@string/nav_practice" />
+    <item
+        android:id="@+id/topicsFragment"
+        android:icon="@drawable/ic_book"
+        android:title="@string/nav_topics" />
+    <item
+        android:id="@+id/progressFragment"
+        android:icon="@drawable/ic_bar_chart"
+        android:title="@string/nav_progress" />
+</menu>

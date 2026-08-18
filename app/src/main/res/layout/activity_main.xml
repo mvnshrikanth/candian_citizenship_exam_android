@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            app:defaultNavHost="true" />
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
 
         <!-- 1dp hairline above the bar, per the design's border-top. -->
         <View
@@ -33,6 +34,12 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorSurfaceContainer"
             app:elevation="0dp"
-            app:labelVisibilityMode="labeled" />
+            app:itemActiveIndicatorStyle="@style/NavActiveIndicator"
+            app:itemIconTint="@color/nav_item_tint"
+            app:itemTextColor="@color/nav_item_text"
+            app:itemTextAppearanceActive="@style/Text.Nav.Selected"
+            app:itemTextAppearanceInactive="@style/Text.Nav"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

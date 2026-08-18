@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Navigation is by destination id, not actions: screens then never need to
+     know about each other, and any screen can reach weak/bookmarks/settings. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mvnsh.citizenship.ui.home.HomeFragment"
+        android:label="homeFragment"
+        />
+
+    <fragment
+        android:id="@+id/practiceFragment"
+        android:name="com.mvnsh.citizenship.ui.practice.PracticeFragment"
+        android:label="practiceFragment"
+        />
+
+    <fragment
+        android:id="@+id/topicsFragment"
+        android:name="com.mvnsh.citizenship.ui.topics.TopicsFragment"
+        android:label="topicsFragment"
+        />
+
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.mvnsh.citizenship.ui.progress.ProgressFragment"
+        android:label="progressFragment"
+        />
+
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.mvnsh.citizenship.ui.onboarding.OnboardingFragment"
+        android:label="onboardingFragment"
+        />
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.mvnsh.citizenship.ui.quiz.QuizFragment"
+        android:label="quizFragment"
+        />
+
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="com.mvnsh.citizenship.ui.quiz.ResultsFragment"
+        android:label="resultsFragment"
+        />
+
+    <fragment
+        android:id="@+id/mockIntroFragment"
+        android:name="com.mvnsh.citizenship.ui.mock.MockIntroFragment"
+        android:label="mockIntroFragment"
+        />
+
+    <fragment
+        android:id="@+id/mockFragment"
+        android:name="com.mvnsh.citizenship.ui.mock.MockFragment"
+        android:label="mockFragment"
+        />
+
+    <fragment
+        android:id="@+id/mockResultsFragment"
+        android:name="com.mvnsh.citizenship.ui.mock.MockResultsFragment"
+        android:label="mockResultsFragment"
+        />
+
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.mvnsh.citizenship.ui.review.ReviewFragment"
+        android:label="reviewFragment"
+        />
+
+    <fragment
+        android:id="@+id/weakFragment"
+        android:name="com.mvnsh.citizenship.ui.lists.WeakFragment"
+        android:label="weakFragment"
+        />
+
+    <fragment
+        android:id="@+id/bookmarksFragment"
+        android:name="com.mvnsh.citizenship.ui.lists.BookmarksFragment"
+        android:label="bookmarksFragment"
+        />
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.mvnsh.citizenship.ui.search.SearchFragment"
+        android:label="searchFragment"
+        />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.mvnsh.citizenship.ui.settings.SettingsFragment"
+        android:label="settingsFragment"
+        />
+
+    <fragment
+        android:id="@+id/topicDetailFragment"
+        android:name="com.mvnsh.citizenship.ui.topics.TopicDetailFragment"
+        android:label="topicDetailFragment">
+        <argument
+            android:name="topicKey"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
