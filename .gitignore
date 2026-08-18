@@ -1,5 +1,6 @@
 # Gradle / build
 .gradle/
+.kotlin/
 build/
 local.properties
 captures/
@@ -11,6 +12,8 @@ build-data/
 
 # IDE
 .idea/caches/
+.idea/deploymentTargetSelector.xml
+.idea/deploymentTargetDropDown.xml
 .idea/gradle.xml
 .idea/appInsightsSettings.xml
 .idea/deviceManager.xml
