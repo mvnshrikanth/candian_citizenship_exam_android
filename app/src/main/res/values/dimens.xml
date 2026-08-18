@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shape -->
+    <dimen name="radius_pill">100dp</dimen>
+    <dimen name="radius_xl">28dp</dimen>
+    <dimen name="radius_lg">20dp</dimen>
+    <dimen name="radius_md">16dp</dimen>
+    <dimen name="radius_sm">14dp</dimen>
+    <dimen name="radius_xs">12dp</dimen>
+    <dimen name="radius_badge">8dp</dimen>
+
+    <!-- Screen padding -->
+    <dimen name="screen_pad_h">16dp</dimen>
+    <dimen name="screen_pad_top">12dp</dimen>
+    <dimen name="screen_pad_bottom">20dp</dimen>
+    <dimen name="onboard_pad_h">22dp</dimen>
+    <dimen name="onboard_pad_top">24dp</dimen>
+    <dimen name="onboard_pad_bottom">26dp</dimen>
+
+    <!-- Gaps and padding -->
+    <dimen name="gap_section">14dp</dimen>
+    <dimen name="gap_list">8dp</dimen>
+    <dimen name="gap_list_wide">10dp</dimen>
+    <dimen name="pad_card">16dp</dimen>
+    <dimen name="pad_card_xl">20dp</dimen>
+    <dimen name="pad_card_row">15dp</dimen>
+
+    <!-- Recurring component sizes -->
+    <dimen name="stroke_card">1dp</dimen>
+    <dimen name="bar_thin">6dp</dimen>
+    <dimen name="bar_goal">8dp</dimen>
+    <dimen name="touch_min">48dp</dimen>
+    <dimen name="circle_action">44dp</dimen>
+    <dimen name="marker_size">28dp</dimen>
+    <dimen name="cta_pad_v">17dp</dimen>
+</resources>

@@ -1,0 +1,28 @@
+# Gradle / build
+.gradle/
+build/
+local.properties
+captures/
+*.apk
+*.aab
+
+# Upstream data inputs for the bank build (reproducible; see Task 2)
+build-data/
+
+# IDE
+.idea/caches/
+.idea/gradle.xml
+.idea/appInsightsSettings.xml
+.idea/deviceManager.xml
+.idea/libraries/
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/compiler.xml
+.idea/migrations.xml
+.idea/.name
+.idea/shelf/
+
+# OS
+.DS_Store
+Thumbs.db

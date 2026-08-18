@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quiet Card palette. Material Theme Builder output for a #8F4A3C seed. -->
+<resources>
+    <color name="md_primary">#8F4A3C</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_primary_container">#FFDBD1</color>
+    <color name="md_on_primary_container">#723528</color>
+    <color name="md_secondary">#5C6146</color>
+    <color name="md_on_secondary">#FFFFFF</color>
+    <color name="md_secondary_container">#E3E8D3</color>
+    <color name="md_on_secondary_container">#3E4530</color>
+    <color name="md_on_secondary_container_strong">#1A1F0C</color>
+    <color name="md_error">#BA1A1A</color>
+    <color name="md_on_error">#FFFFFF</color>
+    <color name="md_error_container">#FFDAD6</color>
+    <color name="md_on_error_container">#93000A</color>
+    <color name="md_surface">#FFF8F6</color>
+    <color name="md_on_surface">#231917</color>
+    <color name="md_on_surface_variant">#534341</color>
+    <color name="md_text_muted">#6F5D59</color>
+    <color name="md_outline">#85736F</color>
+    <color name="md_outline_variant">#E4D3CE</color>
+    <color name="md_surface_container_lowest">#FFFFFF</color>
+    <color name="md_surface_container">#F5E9E5</color>
+    <color name="md_surface_container_high">#EFDFDA</color>
+    <color name="md_inverse_surface">#372F2D</color>
+    <color name="md_inverse_on_surface">#F5E9E5</color>
+    <color name="md_scrim_32">#52231917</color>
+    <color name="md_goal_track">#2E723528</color>
+</resources>

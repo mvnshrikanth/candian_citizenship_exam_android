@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Citizenship Coach</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_practice">Practice</string>
+    <string name="nav_topics">Topics</string>
+    <string name="nav_progress">Progress</string>
+
+    <!-- Notification channel -->
+    <string name="channel_reminders">Study reminders</string>
+    <string name="channel_reminders_desc">Daily nudges, streak warnings and test-date countdowns.</string>
+</resources>

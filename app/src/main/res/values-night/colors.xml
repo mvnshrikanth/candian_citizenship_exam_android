@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark scheme of the same tonal palette. Every name here must exist in values/colors.xml. -->
+<resources>
+    <color name="md_primary">#FFB5A0</color>
+    <color name="md_on_primary">#561F0F</color>
+    <color name="md_primary_container">#723528</color>
+    <color name="md_on_primary_container">#FFDBD1</color>
+    <color name="md_secondary">#C5CBB0</color>
+    <color name="md_on_secondary">#2E3420</color>
+    <color name="md_secondary_container">#444B35</color>
+    <color name="md_on_secondary_container">#C5CBB0</color>
+    <color name="md_on_secondary_container_strong">#E3E8D3</color>
+    <color name="md_error">#FFB4AB</color>
+    <color name="md_on_error">#690005</color>
+    <color name="md_error_container">#93000A</color>
+    <color name="md_on_error_container">#FFDAD6</color>
+    <color name="md_surface">#1A1110</color>
+    <color name="md_on_surface">#F1DFDB</color>
+    <color name="md_on_surface_variant">#D8C2BC</color>
+    <color name="md_text_muted">#BCA6A1</color>
+    <color name="md_outline">#A08C87</color>
+    <color name="md_outline_variant">#534341</color>
+    <color name="md_surface_container_lowest">#140C0B</color>
+    <color name="md_surface_container">#271D1B</color>
+    <color name="md_surface_container_high">#322825</color>
+    <color name="md_inverse_surface">#F1DFDB</color>
+    <color name="md_inverse_on_surface">#372F2D</color>
+    <color name="md_scrim_32">#52000000</color>
+    <color name="md_goal_track">#2EFFDBD1</color>
+</resources>

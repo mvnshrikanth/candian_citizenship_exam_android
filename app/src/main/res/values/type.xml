@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Typography from the Quiet Card spec. Weight rides the variable font's wght axis.
+     parent="" on every style: dotted names would otherwise inherit implicitly. -->
+<resources>
+    <style name="Text.Display.Hero" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Display.Score" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">64sp</item>
+        <item name="android:lineSpacingMultiplier">0.9</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:textColor">@color/md_primary</item>
+    </style>
+    <style name="Text.Display.Accuracy" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">52sp</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:textColor">@color/md_on_primary_container</item>
+    </style>
+    <style name="Text.Headline.Screen" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">27sp</item>
+        <item name="android:letterSpacing">-0.015</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Headline.Section" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">29sp</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Headline.Weak" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+        <item name="android:letterSpacing">-0.015</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Headline.Dialog" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Headline.Empty" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Question" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 500"</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Stat.XL" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Stat.L" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Stat.M" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Stat.S" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Stat.Inline" parent="">
+        <item name="android:fontFamily">@font/roboto_serif</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/md_primary</item>
+    </style>
+    <style name="Text.Title.Card" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Title.Row" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Option" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">15.5sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Body" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:lineSpacingMultiplier">1.45</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Body.Loose" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:lineSpacingMultiplier">1.55</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Body.Small" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/md_on_surface_variant</item>
+    </style>
+    <style name="Text.Meta" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:textColor">@color/md_on_surface_variant</item>
+    </style>
+    <style name="Text.Meta.Small" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:textColor">@color/md_text_muted</item>
+    </style>
+    <style name="Text.Overline" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 700"</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:letterSpacing">0.07</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/md_on_primary_container</item>
+    </style>
+    <style name="Text.Badge" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 700"</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Nav" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 400"</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:textColor">@color/md_on_surface_variant</item>
+    </style>
+    <style name="Text.Nav.Selected" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:textColor">@color/md_on_primary_container</item>
+    </style>
+    <style name="Text.Cta" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+    <style name="Text.Cta.Large" parent="">
+        <item name="android:fontFamily">@font/roboto_flex</item>
+        <item name="android:fontVariationSettings">"'wght' 600"</item>
+        <item name="android:textSize">16.5sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+</resources>
