@@ -27,8 +27,8 @@ class BankDataTest {
     private val explanations: Map<String, Explanation> = json.decodeFromString(res("explanations.json"))
 
     @Test
-    fun bank_has_501_questions() {
-        assertEquals(501, bank.size)
+    fun bank_has_535_questions() {
+        assertEquals(535, bank.size)
     }
 
     @Test
@@ -42,25 +42,30 @@ class BankDataTest {
     }
 
     @Test
-    fun ids_are_unique_and_must_not_be_assumed_contiguous() {
+    fun ids_are_unique() {
         val ids = bank.map { it.id }
         assertEquals("ids must be unique", ids.size, ids.toSet().size)
-        // As shipped the bank runs 1..502 with 39 absent, so id != index. Anything keyed
-        // by list position would silently shift for every question after 38. This asserts
-        // the gap still exists so nobody "tidies" the data and hides the hazard.
-        assertTrue("ids are expected to be sparse", ids.max() - ids.min() + 1 > ids.size)
     }
 
     @Test
-    fun question_4_answer_key_is_corrected_to_1982() {
-        val q = bank.first { it.id == 4 }
-        assertEquals("1982", q.options[q.answer])
+    fun question_identity_is_the_id_and_nothing_keys_on_position() {
+        // The bank used to run 1..502 with 39 absent, and a test asserted that gap so
+        // nobody "tidied" it away and hid the id != index hazard. Upstream renumbered:
+        // ids are now contiguous 1..535, so that guard is gone rather than weakened.
+        //
+        // The hazard it guarded has not gone anywhere. Bookmarks, seen records, sessions
+        // and mock marks are all keyed by id and survive in DataStore across upgrades, so
+        // an id must keep meaning one question. This asserts the ids are a set of distinct
+        // positive numbers and leaves it at that - contiguity is not something to rely on.
+        assertTrue("ids must be positive", bank.all { it.id > 0 })
+        assertEquals("ids must be unique", bank.size, bank.map { it.id }.toSet().size)
     }
 
     @Test
-    fun every_question_has_a_topic_from_the_designs_taxonomy() {
-        // The taxonomy is joined in from the design's bank.json at build time, so a
-        // blank or unknown topic means tools/build_bank.py silently missed a row.
+    fun every_question_has_a_topic_from_the_taxonomy() {
+        // Topics are mapped from the upstream category by tools/build_bank.py, which
+        // aborts on an unknown one. A topic outside this set means Topics.kt and the
+        // script's TOPIC_BY_CATEGORY have drifted apart.
         bank.forEach { q ->
             assertTrue("q${q.id} has topic '${q.topic}' outside ${Topics.keys}", q.topic in Topics.keys)
         }
@@ -85,10 +90,15 @@ class BankDataTest {
     }
 
     @Test
-    fun an_explanation_free_question_is_a_supported_state() {
-        // q4 has no authored explanation; the quiz screen renders its "Answer" panel
-        // instead of "Why". If this ever becomes false the test is fine to delete, but
-        // the no-explanation branch still has to stay reachable.
-        assertTrue("q4 unexpectedly has an explanation", "4" !in explanations.keys)
+    fun every_question_now_carries_an_explanation() {
+        // Upstream authors why/tip for all of them; it used to be 11 of 501. The quiz's
+        // "not written yet" panel is therefore unreachable from the shipped data - it is
+        // kept as a fallback because the asset is the only thing guaranteeing this, and
+        // OptionStyleTest still covers the branch.
+        assertEquals(bank.size, explanations.size)
+        assertTrue(
+            "an explanation was written but left blank",
+            explanations.values.all { it.why.isNotBlank() },
+        )
     }
 }

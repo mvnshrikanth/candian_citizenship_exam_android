@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One row of a grouped list. Opaque so the container's fill only shows through the
+     1dp gap that acts as the divider. -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setting_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurfaceContainerLowest"
+    android:minHeight="@dimen/touch_min"
+    android:paddingStart="@dimen/pad_card"
+    android:paddingTop="14dp"
+    android:paddingEnd="@dimen/pad_card"
+    android:paddingBottom="14dp">
+
+    <ImageView
+        android:id="@+id/row_leading"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:importantForAccessibility="no"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/md_on_surface_variant"
+        tools:src="@drawable/ic_download_done"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/Text.Title.Row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/row_icon"
+        app:layout_constraintStart_toEndOf="@id/row_leading"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Question bank downloaded" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        style="@style/Text.Meta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        app:layout_constraintEnd_toStartOf="@id/row_icon"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="501 questions · works offline" />
+
+    <ImageView
+        android:id="@+id/row_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:importantForAccessibility="no"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/md_outline"
+        tools:src="@drawable/ic_open_in_new"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>

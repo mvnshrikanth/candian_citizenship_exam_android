@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The design's switch is drawn, not a Material one. Accessibility state is attached in
+     code, since a hand-drawn track tells TalkBack nothing on its own. -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/switch_row"
+    style="@style/Card.Bordered"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/pad_card">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/switch_label"
+                style="@style/Text.Title.Row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Daily study reminder" />
+
+            <TextView
+                android:id="@+id/switch_sub"
+                style="@style/Text.Meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:lineSpacingMultiplier="1.4"
+                tools:text="One nudge at 8pm if you have not studied" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/switch_track"
+            android:layout_width="52dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="14dp"
+            android:background="@drawable/bg_switch_track">
+
+            <View
+                android:id="@+id/switch_thumb"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_switch_thumb" />
+        </FrameLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

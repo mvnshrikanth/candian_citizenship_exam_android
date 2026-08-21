@@ -1,112 +1,127 @@
-#!/usr/bin/env python3
-"""Build app/src/main/assets/bank.json from the two upstream sources.
+"""Build the shipped question bank from the upstream repo's questions.json.
 
-  build-data/questions.json  authoritative text, options, answer keys, raw category
-                             (data/questions.json on main in the web repo)
-  build-data/bank.json       the design project's derived bank; the ONLY source of the
-                             7-topic taxonomy the Android design is built around
+Run from the repo root:
 
-Six of the repo's nine raw categories map 1:1 onto a topic. Three compound ones
-(Government & Economy, History & Geography, Regions & Geography - 147 questions) were
-split per question by the design and cannot be recomputed from the category, so the
-per-id join is the only correct source. Ids missing from the map fall back to their
-category's dominant topic and are REPORTED, never silently guessed.
+    python tools/build_bank.py
 
-Re-run this whenever either upstream file changes. It is deterministic.
+Input  : build-data/questions.json   (git-ignored; copied from data/questions.json
+                                      on main in mvnshrikanth/candian_citizenship_exam)
+Output : app/src/main/assets/bank.json
+         app/src/main/assets/explanations.json
+         app/src/test/resources/{bank,explanations}.json   (JVM test copies)
+
+History worth keeping: an earlier version of this script joined an `id -> topic` map in
+from the design project's own bank.json, because the upstream categories at the time were
+nine compound buckets that could not be recomputed. That join is gone, and must not come
+back: the upstream ids were renumbered and now point at different questions, so joining on
+id would file 500 questions under topics belonging to the questions they replaced -
+silently, and plausibly enough to survive review.
+
+Upstream now ships seven categories of its own, which are adopted as the app's topics.
 """
+
 import collections
 import json
 import pathlib
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC_QUESTIONS = ROOT / "build-data" / "questions.json"
-SRC_TOPICS = ROOT / "build-data" / "bank.json"
-OUT = ROOT / "app" / "src" / "main" / "assets" / "bank.json"
+SOURCE = ROOT / "build-data" / "questions.json"
+ASSETS = ROOT / "app" / "src" / "main" / "assets"
+TEST_RESOURCES = ROOT / "app" / "src" / "test" / "resources"
 
-CLEAN = {
-    "Rights & Responsibilities": "rights",
-    "Indigenous Peoples & Communities": "indigenous",
-    "History": "history",
-    "Symbols & Modern Canada": "symbols",
-    "Government": "government",
-    "Government & Justice": "government",
+# Upstream category -> the app's topic key. Every category must appear here: an unknown
+# one aborts rather than guessing, because a mis-filed question is invisible in the UI.
+TOPIC_BY_CATEGORY = {
+    "Rights and Responsibilities": "rights",
+    "Law and Justice": "law",
+    "Canada's History": "history",
+    "Identity and Symbols": "symbols",
+    "Government and Elections": "government",
+    "Economy": "economy",
+    "Geography and Regions": "geography",
 }
-DOMINANT = {
-    "Government & Economy": "government",
-    "History & Geography": "history",
-    "Regions & Geography": "history",
-}
-KNOWN_TOPICS = {"rights", "indigenous", "history", "symbols", "government", "economy", "geography"}
+
+OPTION_COUNT = 4
 
 
-def main() -> int:
-    for p in (SRC_QUESTIONS, SRC_TOPICS):
-        if not p.exists():
-            sys.exit(f"missing {p} - see the plan's Task 2 Steps 1-2")
+def fail(message):
+    sys.exit(f"build_bank: {message}")
 
-    questions = json.loads(SRC_QUESTIONS.read_text(encoding="utf-8"))
-    topic_by_id = {q["id"]: q["topic"] for q in json.loads(SRC_TOPICS.read_text(encoding="utf-8"))}
 
-    unmapped, out = [], []
+def main():
+    if not SOURCE.exists():
+        fail(f"{SOURCE.relative_to(ROOT)} is missing - copy data/questions.json there first")
+
+    questions = json.loads(SOURCE.read_text(encoding="utf-8"))
+
+    unknown = sorted({q.get("category", "") for q in questions} - TOPIC_BY_CATEGORY.keys())
+    if unknown:
+        fail(f"unknown categories {unknown} - add them to TOPIC_BY_CATEGORY")
+
+    bank = []
+    explanations = {}
+    seen_ids = set()
+
     for q in questions:
-        topic = topic_by_id.get(q["id"])
-        if topic is None:
-            cat = q.get("category", "")
-            topic = CLEAN.get(cat) or DOMINANT.get(cat)
-            if topic is None:
-                sys.exit(f"id {q['id']}: unknown category {cat!r} - add it to CLEAN or DOMINANT")
-            unmapped.append((q["id"], cat, topic))
-        if topic not in KNOWN_TOPICS:
-            sys.exit(f"id {q['id']}: topic {topic!r} is not one of the seven")
-        out.append({
-            "id": q["id"],
-            "topic": topic,
-            "category": q.get("category", ""),
-            "difficulty": q.get("difficulty", ""),
-            "question": q["question"],
-            "options": q["options"],
-            "answer": q["answer"],
-        })
+        qid = q["id"]
+        if qid in seen_ids:
+            fail(f"duplicate id {qid}")
+        seen_ids.add(qid)
 
-    # The Charter was entrenched in 1982; question 11 in the same bank says so.
-    # Patch only if upstream still has it wrong, so a fixed upstream is a no-op.
-    q4 = next((q for q in out if q["id"] == 4), None)
-    if q4 is None:
-        print("NOTE: no question with id 4 in this bank")
-    elif q4["options"] == ["1867", "1921", "1982", "2015"]:
-        if q4["answer"] != 2:
-            q4["answer"] = 2
-            print("PATCHED q4 -> 1982 (upstream still had the wrong answer key)")
-        else:
-            print("q4 already correct upstream - no patch needed")
-    else:
-        print(f"REVIEW BY HAND: q4 options changed upstream: {q4['options']}")
+        options = q["options"]
+        if len(options) != OPTION_COUNT:
+            fail(f"id {qid} has {len(options)} options, expected {OPTION_COUNT}")
+        if not 0 <= q["answer"] < len(options):
+            fail(f"id {qid} has answer {q['answer']} outside its options")
+        if not q["question"].strip():
+            fail(f"id {qid} has no question text")
 
-    for q in out:
-        if not 0 <= q["answer"] < len(q["options"]):
-            sys.exit(f"id {q['id']}: answer {q['answer']} out of range for {len(q['options'])} options")
+        bank.append(
+            {
+                "id": qid,
+                "topic": TOPIC_BY_CATEGORY[q["category"]],
+                "category": q.get("category", ""),
+                "difficulty": q.get("difficulty", ""),
+                "question": q["question"],
+                "options": options,
+                "answer": q["answer"],
+            }
+        )
 
-    ids = [q["id"] for q in out]
-    if len(ids) != len(set(ids)):
-        dupes = [i for i, n in collections.Counter(ids).items() if n > 1]
-        sys.exit(f"duplicate ids: {dupes}")
+        # Upstream now authors why/tip for every question, so the quiz's "not written yet"
+        # panel becomes a fallback rather than the common case. Blank entries are dropped
+        # so a missing one stays distinguishable from an empty one.
+        why = str(q.get("why", "")).strip()
+        tip = str(q.get("tip", "")).strip()
+        if why or tip:
+            explanations[str(qid)] = {"why": why, "tip": tip}
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    ASSETS.mkdir(parents=True, exist_ok=True)
+    TEST_RESOURCES.mkdir(parents=True, exist_ok=True)
 
-    print(f"shipped questions: {len(out)}")
-    print("topics:", dict(collections.Counter(q["topic"] for q in out).most_common()))
-    if unmapped:
-        print()
-        print(f"{len(unmapped)} ids were NOT in the design's topic map and used a fallback.")
-        print("These need a real topic assigned by a human:")
-        for i, cat, t in unmapped:
-            print(f"  id {i}: category {cat!r} -> guessed {t!r}")
-        return 2
-    print("every topic came from the design's map - no guesses")
-    return 0
+    compact = {"ensure_ascii": False, "separators": (",", ":")}
+    bank_json = json.dumps(bank, **compact)
+    explanations_json = json.dumps(explanations, **compact)
+
+    for directory in (ASSETS, TEST_RESOURCES):
+        (directory / "bank.json").write_text(bank_json, encoding="utf-8")
+        (directory / "explanations.json").write_text(explanations_json, encoding="utf-8")
+
+    counts = collections.Counter(q["topic"] for q in bank)
+    ids = sorted(seen_ids)
+    print(f"shipped questions : {len(bank)}")
+    print(f"ids               : {ids[0]}..{ids[-1]}, contiguous={ids == list(range(ids[0], ids[-1] + 1))}")
+    print(f"explanations      : {len(explanations)}")
+    print("topics            :")
+    for topic in sorted(counts, key=lambda t: -counts[t]):
+        print(f"  {topic:<11} {counts[topic]}")
+
+    missing = set(TOPIC_BY_CATEGORY.values()) - counts.keys()
+    if missing:
+        fail(f"topics with no questions: {sorted(missing)}")
+    print("every topic is populated and every category was mapped explicitly")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

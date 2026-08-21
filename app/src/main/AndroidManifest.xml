@@ -4,6 +4,16 @@
     <!-- No INTERNET permission: the question bank is a bundled asset. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Package visibility for the Settings feedback row only. Without this,
+         resolveActivity always returns null on API 30+ and the row would report that no
+         mail app exists even when one does. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+
     <application
         android:name=".CitizenshipApp"
         android:allowBackup="true"
