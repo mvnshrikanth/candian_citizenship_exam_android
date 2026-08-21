@@ -84,8 +84,45 @@
     <string name="home_weakest">Weakest topic</string>
     <string name="home_weakest_accuracy">%1$d%% accuracy</string>
 
+    <!-- Practice, verbatim from the design. -->
+    <string name="practice_title">Practice</string>
+    <string name="practice_search">Search all questions</string>
+    <string name="pm_quick_title">Quick practice</string>
+    <string name="pm_quick_sub">10 questions, mixed topics</string>
+    <string name="pm_all_title">All questions</string>
+    <string name="pm_all_sub">Work through the whole bank in order</string>
+    <string name="pm_weak_title">Weak questions</string>
+    <string name="pm_weak_sub">Missed two or more times</string>
+    <string name="pm_marks_title">Bookmarked</string>
+    <string name="pm_marks_sub">Questions you saved</string>
+    <string name="pm_unseen_title">New to you</string>
+    <string name="pm_unseen_sub">Questions you have never seen</string>
+    <string name="pm_topic_title">By topic</string>
+    <string name="pm_topic_sub">Choose one of seven topics</string>
+    <string name="practice_mock_title">Take a mock test</string>
+    <string name="practice_mock_sub">Timed, marked like the real thing</string>
+
+    <!-- Topics -->
+    <string name="topics_title">Topics</string>
+    <string name="topics_sub">Seven topics, drawn from the official study guide.</string>
+    <string name="topic_counts">%1$d / %2$d</string>
+    <string name="topic_accuracy_label">accuracy</string>
+
+    <!-- Topic detail -->
+    <string name="topic_stat_questions">questions</string>
+    <string name="topic_stat_practised">practised</string>
+    <string name="topic_questions_label">Questions</string>
+    <string name="topic_practise_cta">Practise %1$d questions</string>
+    <string name="q_status_new">New</string>
+    <string name="q_status_correct">Correct</string>
+    <string name="q_status_missed">Missed %1$d×</string>
+    <!-- The design shows an em dash for a topic with no attempts, never "0%". -->
+    <string name="stat_none">—</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
+    <string name="cd_bookmark_add">Bookmark this question</string>
+    <string name="cd_bookmark_remove">Remove bookmark</string>
     <string name="cd_search">Search questions</string>
     <string name="cd_settings">Settings</string>
     <string name="cd_goal_progress">Daily goal, %1$d of %2$d questions</string>

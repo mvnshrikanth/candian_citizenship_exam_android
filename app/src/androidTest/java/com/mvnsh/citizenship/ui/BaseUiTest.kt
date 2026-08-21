@@ -1,5 +1,6 @@
 package com.mvnsh.citizenship.ui
 
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
@@ -9,6 +10,9 @@ import com.mvnsh.citizenship.MainActivity
 import com.mvnsh.citizenship.R
 import com.mvnsh.citizenship.data.model.ProgressState
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
 /**
  * Shared setup for screen tests.
@@ -80,4 +84,29 @@ abstract class BaseUiTest {
     }
 
     protected fun progress(): ProgressState = app().progressRepository.state.value
+
+    /**
+     * Matches only the first view carrying [id] in traversal order.
+     *
+     * List rows repeat their child ids by design, so a bare withId matches every row and
+     * Espresso refuses the whole match as ambiguous.
+     *
+     * It latches the view rather than counting: Espresso walks the hierarchy more than
+     * once per interaction, so a "have I seen one yet" flag matches on the first pass and
+     * nothing at all on the second.
+     */
+    protected fun firstWithId(id: Int): Matcher<View> = object : TypeSafeMatcher<View>() {
+        private var latched: View? = null
+
+        override fun describeTo(description: Description) {
+            description.appendText("first view with id ").appendValue(id)
+        }
+
+        override fun matchesSafely(view: View): Boolean {
+            latched?.let { return view === it }
+            if (view.id != id) return false
+            latched = view
+            return true
+        }
+    }
 }

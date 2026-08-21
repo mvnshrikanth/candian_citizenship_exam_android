@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row"
+    style="@style/Card.Bordered"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/radius_xs">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="14dp">
+
+        <View
+            android:id="@+id/dot"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_dot_ring"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/question"
+            style="@style/Text.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/flag"
+            app:layout_constraintStart_toEndOf="@id/dot"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Who is regulated by laws in Canada?" />
+
+        <TextView
+            android:id="@+id/status"
+            style="@style/Text.Meta.Small"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toStartOf="@id/flag"
+            app:layout_constraintStart_toStartOf="@id/question"
+            app:layout_constraintTop_toBottomOf="@id/question"
+            tools:text="Missed 2×" />
+
+        <!-- Drawn at 19dp to match the design; padded out to a 48dp target. -->
+        <ImageButton
+            android:id="@+id/flag"
+            android:layout_width="@dimen/touch_min"
+            android:layout_height="@dimen/touch_min"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="14dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_flag_outline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/md_outline" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

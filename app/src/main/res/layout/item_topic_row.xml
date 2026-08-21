@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row"
+    style="@style/Card.Bordered"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="18dp"
+        android:paddingTop="@dimen/pad_card"
+        android:paddingEnd="18dp"
+        android:paddingBottom="@dimen/pad_card">
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/Text.Cta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/accuracy"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Rights &amp; Responsibilities" />
+
+        <TextView
+            android:id="@+id/blurb"
+            style="@style/Text.Meta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toStartOf="@id/accuracy"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="Rule of law, the Charter, the Oath" />
+
+        <TextView
+            android:id="@+id/accuracy"
+            style="@style/Text.Stat.Inline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="67%" />
+
+        <TextView
+            android:id="@+id/accuracy_label"
+            style="@style/Text.Meta.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/topic_accuracy_label"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accuracy" />
+
+        <com.mvnsh.citizenship.ui.common.BarView
+            android:id="@+id/coverage_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bar_thin"
+            android:layout_marginTop="14dp"
+            app:barFillColor="@color/md_secondary"
+            app:barTrackColor="@color/md_surface_container_high"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/blurb" />
+
+        <TextView
+            android:id="@+id/counts"
+            style="@style/Text.Meta.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coverage_bar"
+            tools:text="12 / 43" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

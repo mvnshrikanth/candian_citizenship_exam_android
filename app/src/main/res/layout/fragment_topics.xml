@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:clipToPadding="false"
+    android:paddingStart="@dimen/screen_pad_h"
+    android:paddingEnd="@dimen/screen_pad_h"
+    android:paddingTop="@dimen/screen_pad_top"
+    android:paddingBottom="@dimen/screen_pad_bottom">
 
-    <TextView
-        android:id="@+id/placeholder_title"
-        style="@style/Text.Headline.Screen"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Topics" />
-</FrameLayout>
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Text.Headline.Screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/topics_title" />
+
+        <TextView
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/topics_sub"
+            android:textColor="@color/md_on_surface_variant" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/topics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_section"
+            android:nestedScrollingEnabled="false"
+            tools:itemCount="7"
+            tools:listitem="@layout/item_topic_row" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
