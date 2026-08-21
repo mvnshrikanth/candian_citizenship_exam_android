@@ -140,6 +140,25 @@
     <string name="dlg_exit_keep">Keep studying</string>
     <string name="dlg_exit_discard">Discard the session</string>
 
+    <!-- Practice results -->
+    <string name="results_label">%1$s · session complete</string>
+    <string name="results_of_correct">of %1$d correct</string>
+    <string name="results_goal_met">Daily goal met · %1$d-day streak safe</string>
+    <string name="results_stat_accuracy">accuracy</string>
+    <string name="results_stat_missed">missed</string>
+    <string name="results_stat_spent">spent</string>
+    <string name="results_minutes">%1$dm</string>
+    <string name="results_percent">%1$d%%</string>
+    <string name="results_missed_label">What you missed</string>
+    <string name="results_you_said">You said: %1$s</string>
+    <string name="results_correct_was">Correct: %1$s</string>
+    <!-- Not in the design, which has no skip on this screen. A question left unanswered
+         still counts against the score, so it is named rather than quietly omitted. -->
+    <string name="results_skipped">Skipped</string>
+    <string name="results_clean_sweep">Every answer correct. Questions you get right twice in a row come back less often.</string>
+    <string name="results_practise_missed">Practise the %1$d you missed</string>
+    <string name="results_back_home">Back to home</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
     <string name="cd_exit_session">Leave session</string>

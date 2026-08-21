@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Card.Bordered"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/pad_card_row">
+
+        <TextView
+            android:id="@+id/topic"
+            style="@style/Text.Meta.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Rights &amp; Responsibilities" />
+
+        <TextView
+            android:id="@+id/question"
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="Who is regulated by laws in Canada?" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/stroke_card"
+            android:layout_marginTop="12dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <TextView
+            android:id="@+id/you_said"
+            style="@style/Text.Body.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/md_on_error_container"
+            tools:text="You said: Individuals" />
+
+        <TextView
+            android:id="@+id/correct_was"
+            style="@style/Text.Body.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:fontVariationSettings="'wght' 600"
+            android:textColor="@color/md_on_secondary_container"
+            tools:text="Correct: Both A and B" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
