@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.navigation.safeargs)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -58,6 +59,12 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.work.runtime)
+    // Auth and Firestore only. Analytics is not used here, and the web app does not use
+    // it either - its config carries a measurementId that nothing ever imports.
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.coroutines.play.services)
 
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)

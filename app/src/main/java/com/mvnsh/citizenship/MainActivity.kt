@@ -12,6 +12,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.mvnsh.citizenship.data.AccountState
+import com.mvnsh.citizenship.data.SyncRepository
 import com.mvnsh.citizenship.databinding.ActivityMainBinding
 import com.mvnsh.citizenship.ui.AppViewModel
 import com.mvnsh.citizenship.ui.common.applyBottomInset
@@ -57,6 +59,28 @@ class MainActivity : AppCompatActivity() {
                 // The graph inflates asynchronously; navigating before it is set throws.
                 if (!restored.onboarded && navController.currentDestination != null) {
                     navController.navigate(R.id.onboardingFragment)
+                }
+            }
+        }
+
+        // Resume syncing for an already-signed-in user. Without this, sync would only
+        // ever run in the session where the user signed in, and a relaunch would look
+        // signed in while quietly mirroring nothing.
+        //
+        // KEEP_LOCAL is right on resume, not a choice: the two sides were reconciled at
+        // sign-in, so this device's state is the newer of the two by definition.
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val app = application as CitizenshipApp
+                app.authRepository.account.distinctUntilChanged().collect { account ->
+                    when (account) {
+                        is AccountState.SignedIn -> app.syncRepository.start(
+                            account.uid,
+                            account.email,
+                            SyncRepository.StartResolution.KEEP_LOCAL,
+                        )
+                        AccountState.SignedOut -> app.syncRepository.stop()
+                    }
                 }
             }
         }

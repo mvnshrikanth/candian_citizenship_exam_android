@@ -19,6 +19,8 @@ testCore = "1.6.1"
 testRunner = "1.6.2"
 testMonitor = "1.7.2"
 testRules = "1.6.1"
+firebaseBom = "34.18.0"
+googleServices = "4.5.0"
 
 [libraries]
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -44,9 +46,16 @@ test-core = { module = "androidx.test:core", version.ref = "testCore" }
 test-runner = { module = "androidx.test:runner", version.ref = "testRunner" }
 test-monitor = { module = "androidx.test:monitor", version.ref = "testMonitor" }
 test-rules = { module = "androidx.test:rules", version.ref = "testRules" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+# Versions come from the BoM, so these are deliberately version-less.
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+# Bridges Play Services Tasks to coroutines, so the Firebase calls can suspend.
+coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

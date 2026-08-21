@@ -296,6 +296,35 @@
     <string name="dlg_clear_confirm">Clear them</string>
     <string name="dlg_cancel">Cancel</string>
 
+    <!-- Account and sync -->
+    <string name="account">Account</string>
+    <string name="account_signed_out">Sign in to sync</string>
+    <string name="account_signed_out_sub">Continue on the web app and back again</string>
+    <string name="account_sign_out">Sign out</string>
+    <string name="account_sign_out_sub">Your progress stays on this device</string>
+    <string name="account_synced">Last synced %1$s</string>
+    <string name="account_synced_from">Last synced %1$s from %2$s</string>
+    <string name="account_syncing">Syncing…</string>
+    <string name="account_never_synced">Not synced yet</string>
+
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_in_blurb">One account carries your progress between the web app and this one. Everything you have already studied on this device is kept.</string>
+    <string name="sign_in_email">Email</string>
+    <string name="sign_in_password">Password</string>
+    <string name="sign_in_cta">Sign in</string>
+    <string name="sign_in_create">Create an account</string>
+    <string name="sign_in_have_account">I already have an account</string>
+    <string name="sign_in_forgot">Forgot your password?</string>
+    <string name="sign_in_reset_sent">Check your email for a reset link.</string>
+    <string name="sign_in_need_email">Enter your email address first.</string>
+    <string name="sign_in_need_password">Enter your password.</string>
+    <string name="sign_in_welcome">Signed in as %1$s</string>
+
+    <string name="dlg_merge_title">Which progress should we keep?</string>
+    <string name="dlg_merge_body">This device and your account both have study history, and they do not match. Whichever you keep replaces the other everywhere.</string>
+    <string name="dlg_merge_keep_local">Keep the progress on this device</string>
+    <string name="dlg_merge_use_cloud">Use the progress in my account</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
     <string name="cd_week_bar">%1$s: %2$d questions</string>

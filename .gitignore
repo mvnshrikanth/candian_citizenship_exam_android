@@ -10,6 +10,11 @@ captures/
 # Upstream data inputs for the bank build (reproducible; see Task 2)
 build-data/
 
+# Firebase client config. Not a secret - security is enforced by Firestore rules - but
+# kept out of the repo to match the web app, which ignores js/firebase-config.js. A fresh
+# clone needs it downloaded from the console; see docs/sync-schema.md.
+app/google-services.json
+
 # IDE
 .idea/caches/
 .idea/deploymentTargetSelector.xml

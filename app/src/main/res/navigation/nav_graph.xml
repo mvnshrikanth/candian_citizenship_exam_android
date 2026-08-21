@@ -91,6 +91,12 @@
         />
 
     <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.mvnsh.citizenship.ui.account.SignInFragment"
+        android:label="signInFragment"
+        />
+
+    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mvnsh.citizenship.ui.settings.SettingsFragment"
         android:label="settingsFragment"

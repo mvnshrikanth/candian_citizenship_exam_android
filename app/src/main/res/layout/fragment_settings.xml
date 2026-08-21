@@ -53,9 +53,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Account -->
+            <TextView
+                style="@style/Text.Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/account" />
+
+            <LinearLayout
+                android:id="@+id/account_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_grouped_list"
+                android:orientation="vertical" />
+
             <!-- Appearance -->
             <TextView
                 style="@style/Text.Overline"
+                android:layout_marginTop="22dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/set_appearance" />

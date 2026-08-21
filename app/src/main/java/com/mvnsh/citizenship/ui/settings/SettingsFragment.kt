@@ -26,7 +26,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.mvnsh.citizenship.BuildConfig
 import com.mvnsh.citizenship.R
+import com.mvnsh.citizenship.data.AccountState
 import com.mvnsh.citizenship.data.BankRepository
+import com.mvnsh.citizenship.data.SyncState
 import com.mvnsh.citizenship.data.model.ProgressState
 import com.mvnsh.citizenship.databinding.FragmentSettingsBinding
 import com.mvnsh.citizenship.databinding.ItemSettingRowBinding
@@ -38,6 +40,7 @@ import com.mvnsh.citizenship.ui.common.applyBottomInset
 import com.mvnsh.citizenship.ui.common.applyTopInset
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 /** Every preference the app has, plus the two destructive actions. */
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
@@ -50,6 +53,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     /** The one Data row whose subtitle counts the bank. */
     private var bankRow: ItemSettingRowBinding? = null
+
+    private val app get() = requireActivity().application as com.mvnsh.citizenship.CitizenshipApp
 
     /**
      * Asked for at the moment a reminder is switched on, never at launch: that is where
@@ -91,6 +96,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
 
         switches = buildSwitches()
+        buildAccountGroup()
         buildDataGroup()
         buildAboutGroup()
 
@@ -129,6 +135,69 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 row.root.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = gap }
             }
             row
+        }
+    }
+
+    /**
+     * Rebuilt on every account change rather than mutated, because the signed-in and
+     * signed-out shapes differ by row count, not just by text.
+     */
+    private fun buildAccountGroup() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(app.authRepository.account, app.syncRepository.state, ::Pair)
+                    .collect { (account, sync) -> renderAccount(account, sync) }
+            }
+        }
+    }
+
+    private fun renderAccount(account: AccountState, sync: SyncState) {
+        binding.accountGroup.removeAllViews()
+
+        when (account) {
+            AccountState.SignedOut -> addGroupedRow(
+                binding.accountGroup,
+                titleRes = R.string.account_signed_out,
+                subtitleRes = R.string.account_signed_out_sub,
+                trailing = R.drawable.ic_chevron_right,
+                onClick = { findNavController().navigate(R.id.signInFragment) },
+            )
+
+            is AccountState.SignedIn -> {
+                val row = addGroupedRow(
+                    binding.accountGroup,
+                    titleRes = R.string.account,
+                    keepSubtitle = true,
+                )
+                row.title.text = account.email
+                row.subtitle.text = syncLine(sync)
+
+                addGroupedRow(
+                    binding.accountGroup,
+                    titleRes = R.string.account_sign_out,
+                    // Sign-out is not a reset, and the copy has to say so or it reads
+                    // like one next to "Reset all progress" further down the screen.
+                    subtitleRes = R.string.account_sign_out_sub,
+                    onClick = {
+                        app.syncRepository.stop()
+                        app.authRepository.signOut()
+                    },
+                )
+            }
+        }
+    }
+
+    private fun syncLine(sync: SyncState): String = when (sync) {
+        SyncState.Off, is SyncState.Failed -> getString(R.string.account_never_synced)
+        SyncState.Syncing -> getString(R.string.account_syncing)
+        is SyncState.Synced -> {
+            val at = sync.atEpochMs
+                ?.let { DateUtils.fmtDate(Instant.ofEpochMilli(it).toString()) }
+                ?.takeIf { it.isNotBlank() }
+                ?: return getString(R.string.account_never_synced)
+            sync.fromDevice
+                ?.let { getString(R.string.account_synced_from, at, it) }
+                ?: getString(R.string.account_synced, at)
         }
     }
 
