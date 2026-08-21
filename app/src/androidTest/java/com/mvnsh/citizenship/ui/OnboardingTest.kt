@@ -39,7 +39,8 @@ class OnboardingTest : BaseUiTest() {
 
     @Test
     fun the_first_page_states_what_the_app_offers() = freshInstall {
-        onView(withText("501 questions across seven topics")).check(matches(isDisplayed()))
+        // Formatted from the loaded bank, which is the point: the design hardcoded it.
+        onView(withText("535 questions across seven topics")).check(matches(isDisplayed()))
         onView(withText("Timed mock tests, marked like the real one")).check(matches(isDisplayed()))
     }
 

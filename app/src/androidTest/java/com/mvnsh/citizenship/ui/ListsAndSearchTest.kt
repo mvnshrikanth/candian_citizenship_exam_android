@@ -119,14 +119,17 @@ class ListsAndSearchTest : BaseUiTest() {
 
             onView(withId(R.id.query)).perform(replaceText("habeas corpus"))
             closeSoftKeyboard()
-            onView(withText(containsString("Habeas Corpus"))).check(matches(isDisplayed()))
+            // Several questions mention it, so the assertion names the topmost row
+            // rather than asking Espresso to pick between them.
+            onView(firstWithId(R.id.question))
+                .check(matches(withText(containsString("Habeas Corpus"))))
         }
 
     @Test
     fun the_search_hint_quotes_the_real_bank_size() =
         withProgress(ProgressState(onboarded = true)) {
             navigateTo(R.id.searchFragment)
-            onView(withId(R.id.query)).check(matches(withHint("Search 501 questions")))
+            onView(withId(R.id.query)).check(matches(withHint("Search 535 questions")))
         }
 
     @Test

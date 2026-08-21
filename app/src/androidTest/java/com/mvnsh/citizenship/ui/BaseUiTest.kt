@@ -1,6 +1,7 @@
 package com.mvnsh.citizenship.ui
 
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
@@ -32,7 +33,7 @@ abstract class BaseUiTest {
         runBlocking { app().progressRepository.replace(state) }
         scenario = ActivityScenario.launch(MainActivity::class.java)
         try {
-            awaitBankLoaded()
+            awaitReady()
             block()
         } finally {
             scenario?.close()
@@ -41,21 +42,34 @@ abstract class BaseUiTest {
     }
 
     /**
-     * The bank is parsed off the main thread, so Espresso's idling does not cover it and
-     * an assertion can otherwise race a screen that has not received its questions yet.
+     * Waits for the screen to be genuinely ready: the activity RESUMED and the bank
+     * parsed.
+     *
+     * Both halves matter. The bank is parsed off the main thread, so Espresso's idling
+     * does not cover it and an assertion can race a screen with no questions yet. And
+     * ActivityScenario.launch returning does not guarantee RESUMED on a slow emulator -
+     * this one has been seen taking 48s to first frame - where Espresso then refuses
+     * every action with NoActivityResumedException, which reads like a broken screen
+     * rather than a slow one.
      */
-    private fun awaitBankLoaded(timeoutMs: Long = 10_000) {
+    private fun awaitReady(timeoutMs: Long = 30_000) {
         val deadline = System.currentTimeMillis() + timeoutMs
+        var lastState: Lifecycle.State? = null
         while (System.currentTimeMillis() < deadline) {
-            var settled = false
-            rule.onActivity { activity ->
-                val vm = ViewModelProvider(activity)[AppViewModel::class.java]
-                settled = vm.bank.value != null || vm.loadFailed.value
+            lastState = rule.state
+            if (lastState == Lifecycle.State.RESUMED) {
+                var settled = false
+                rule.onActivity { activity ->
+                    val vm = ViewModelProvider(activity)[AppViewModel::class.java]
+                    settled = vm.bank.value != null || vm.loadFailed.value
+                }
+                if (settled) return
             }
-            if (settled) return
             Thread.sleep(25)
         }
-        throw AssertionError("the question bank did not load within ${timeoutMs}ms")
+        throw AssertionError(
+            "screen not ready within ${timeoutMs}ms (activity state: $lastState)",
+        )
     }
 
     /** Convenience for the common "past onboarding, nothing else set" case. */
@@ -84,6 +98,22 @@ abstract class BaseUiTest {
     }
 
     protected fun progress(): ProgressState = app().progressRepository.state.value
+
+    /**
+     * Waits for persisted state to satisfy [predicate].
+     *
+     * Some actions land through a coroutine that writes to DataStore - resetProgress and
+     * seedDemo both replace the whole blob - and Espresso's idling does not cover that,
+     * so reading progress() straight after the tap is a race.
+     */
+    protected fun awaitProgress(timeoutMs: Long = 5_000, predicate: (ProgressState) -> Boolean) {
+        val deadline = System.currentTimeMillis() + timeoutMs
+        while (System.currentTimeMillis() < deadline) {
+            if (predicate(progress())) return
+            Thread.sleep(25)
+        }
+        throw AssertionError("progress did not settle within ${timeoutMs}ms: ${progress()}")
+    }
 
     /**
      * Matches only the first view carrying [id] in traversal order.

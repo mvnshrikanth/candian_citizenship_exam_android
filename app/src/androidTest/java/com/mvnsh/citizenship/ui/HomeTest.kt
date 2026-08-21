@@ -146,14 +146,14 @@ class HomeTest : BaseUiTest() {
 
     @Test
     fun the_weakest_topic_card_names_the_lowest_scoring_practised_topic() = withProgress(
-        // ids 1-3 are Rights & Responsibilities; two of three attempts on id 2 were missed.
+        // ids 1-3 are Law and Justice; two of three attempts on id 2 were missed.
         ProgressState(
             onboarded = true,
             seen = mapOf(1 to SeenStat(1, 0), 2 to SeenStat(3, 2)),
         ),
     ) {
         onView(withId(R.id.weakest_card)).check(matches(isDisplayed()))
-        onView(withId(R.id.weakest_name)).check(matches(withText("Rights & Responsibilities")))
+        onView(withId(R.id.weakest_name)).check(matches(withText("Law and Justice")))
         onView(withId(R.id.weakest_accuracy)).check(matches(withText("50% accuracy")))
         onView(withId(R.id.weakest_card)).perform(click())
         assertEquals(R.id.topicDetailFragment, currentDestinationId())

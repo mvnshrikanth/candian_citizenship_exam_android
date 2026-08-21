@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MockTest : BaseUiTest() {
 
-    /** A mock in progress. q1's answer is index 2; q2's is index 0. */
+    /** A mock in progress. Ids 1-3 are Law and Justice; q1 and q2 both answer index 0. */
     private fun mock(
         ids: List<Int>,
         marks: Map<Int, Int> = emptyMap(),
@@ -133,12 +133,12 @@ class MockTest : BaseUiTest() {
 
     @Test
     fun a_mock_gives_no_feedback_and_the_answer_stays_changeable() = inMock(mock(listOf(1, 2, 3))) {
-        onView(withText("Individuals")).perform(click())
+        onView(withText("Only individual citizens")).perform(scrollTo(), click())
         onView(withText("Why")).check(doesNotExist())
         onView(withText("Correct")).check(doesNotExist())
 
-        onView(withText("Governments")).perform(click())
-        assertEquals(1, progress().session!!.marks[1])
+        onView(withText("Only government officials and politicians")).perform(scrollTo(), click())
+        assertEquals(2, progress().session!!.marks[1])
         assertEquals("a mock records nothing until submit", 0, progress().answered)
     }
 

@@ -24,8 +24,8 @@ import org.junit.runner.RunWith
 class QuizTest : BaseUiTest() {
 
     /**
-     * Seeds a running practice session. Question 1's answer is "Both A and B"; question
-     * 4 is the one with no authored explanation.
+     * Seeds a running practice session. Ids 1-3 are Law and Justice; id 1's answer is
+     * option 0 and id 4's is "1982".
      */
     private fun startedQuiz(vararg ids: Int) = ProgressState(
         onboarded = true,
@@ -43,17 +43,18 @@ class QuizTest : BaseUiTest() {
     @Test
     fun the_header_shows_topic_counter_and_progress() = inQuiz(startedQuiz(1, 2, 3)) {
         onView(withId(R.id.q_counter)).check(matches(withText("1/3")))
-        onView(withId(R.id.q_topic)).check(matches(withText("Rights & Responsibilities")))
-        onView(withText("Who is regulated by laws in Canada?")).check(matches(isDisplayed()))
+        onView(withId(R.id.q_topic)).check(matches(withText("Law and Justice")))
+        onView(withText("Under the rule of law in Canada, who must obey the law?"))
+            .check(matches(isDisplayed()))
         onView(withId(R.id.skip)).check(matches(isDisplayed()))
     }
 
     @Test
     fun a_correct_answer_reveals_the_explanation_and_the_next_button() =
         inQuiz(startedQuiz(1, 2)) {
-            onView(withText("Both A and B")).perform(click())
+            onView(withText("Everyone, including individuals, corporations, and governments")).perform(scrollTo(), click())
             onView(withText("Why")).perform(scrollTo()).check(matches(isDisplayed()))
-            onView(withText(containsString("The rule of law means everyone is regulated by law")))
+            onView(withText(containsString("all individuals, organizations, and governments")))
                 .perform(scrollTo())
                 .check(matches(isDisplayed()))
             onView(withText("Next question")).check(matches(isDisplayed()))
@@ -65,8 +66,8 @@ class QuizTest : BaseUiTest() {
 
     @Test
     fun a_wrong_answer_is_recorded_and_the_answer_is_shown() = inQuiz(startedQuiz(1, 2)) {
-        onView(withText("Individuals")).perform(click())
-        onView(withText("Your pick")).check(matches(isDisplayed()))
+        onView(withText("Only individual citizens")).perform(scrollTo(), click())
+        onView(withText("Your pick")).perform(scrollTo()).check(matches(isDisplayed()))
         onView(withText("Correct")).check(matches(isDisplayed()))
         val p = progress()
         assertEquals(1, p.answered)
@@ -76,27 +77,28 @@ class QuizTest : BaseUiTest() {
 
     @Test
     fun tapping_a_second_option_after_revealing_changes_nothing() = inQuiz(startedQuiz(1, 2)) {
-        onView(withText("Individuals")).perform(click())
-        onView(withText("Governments")).perform(click())
+        onView(withText("Only individual citizens")).perform(scrollTo(), click())
+        onView(withText("Only government officials and politicians")).perform(scrollTo(), click())
         assertEquals("a revealed question is locked", 1, progress().answered)
         assertEquals("and counted exactly once", 1, progress().seen[1]!!.s)
     }
 
     @Test
-    fun a_question_with_no_authored_explanation_shows_the_answer_panel_instead() =
-        inQuiz(startedQuiz(4)) {
-            onView(withText("1982")).perform(click())
-            onView(withText("Answer")).perform(scrollTo()).check(matches(isDisplayed()))
-            onView(
-                withText(
-                    containsString("An explanation for this question hasn't been written yet"),
-                ),
-            ).perform(scrollTo()).check(matches(isDisplayed()))
-        }
+    fun the_why_panel_carries_the_authored_tip_as_well_as_the_reason() = inQuiz(startedQuiz(4)) {
+        // Upstream now authors why/tip for every question, so the "not written yet" panel
+        // is unreachable from the shipped assets. The branch stays in QuizFragment because
+        // only the asset guarantees that; BankDataTest is what would catch a regression.
+        onView(withText("1982")).perform(scrollTo(), click())
+        onView(withText("Why")).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withText(containsString("entrenched in the Constitution in 1982")))
+            .perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withText(containsString("1867 = Confederation")))
+            .perform(scrollTo()).check(matches(isDisplayed()))
+    }
 
     @Test
     fun the_last_question_offers_results_and_reaches_them() = inQuiz(startedQuiz(1)) {
-        onView(withText("Both A and B")).perform(click())
+        onView(withText("Everyone, including individuals, corporations, and governments")).perform(scrollTo(), click())
         onView(withText("See results")).perform(click())
         assertEquals(R.id.resultsFragment, currentDestinationId())
         val session = progress().session!!

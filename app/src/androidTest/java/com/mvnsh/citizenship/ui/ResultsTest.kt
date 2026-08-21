@@ -22,7 +22,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ResultsTest : BaseUiTest() {
 
-    /** q1's answer is index 2 ("Both A and B"); q2's is index 0 ("Magna Carta"). */
+    /** Ids 1 and 2 are both Law and Justice, and both answer index 0. */
     private fun finished(
         marks: Map<Int, Int>,
         right: Int,
@@ -46,7 +46,7 @@ class ResultsTest : BaseUiTest() {
 
     @Test
     fun the_score_headline_and_tiles_reflect_the_session() =
-        inResults(finished(mapOf(1 to 2, 2 to 1), right = 1)) {
+        inResults(finished(mapOf(1 to 0, 2 to 1), right = 1)) {
             onView(withText("Quick practice · session complete")).check(matches(isDisplayed()))
             onView(withId(R.id.score)).check(matches(withText("1")))
             onView(withText("of 2 correct")).check(matches(isDisplayed()))
@@ -57,11 +57,11 @@ class ResultsTest : BaseUiTest() {
 
     @Test
     fun a_missed_question_is_listed_with_both_answers() =
-        inResults(finished(mapOf(1 to 0, 2 to 0), right = 1)) {
+        inResults(finished(mapOf(1 to 1, 2 to 0), right = 1)) {
             onView(withText("What you missed")).perform(scrollTo()).check(matches(isDisplayed()))
-            onView(withText("You said: Individuals")).perform(scrollTo())
+            onView(withText("You said: Only individual citizens")).perform(scrollTo())
                 .check(matches(isDisplayed()))
-            onView(withText("Correct: Both A and B")).perform(scrollTo())
+            onView(withText("Correct: Everyone, including individuals, corporations, and governments")).perform(scrollTo())
                 .check(matches(isDisplayed()))
             onView(withText("Practise the 1 you missed")).check(matches(isDisplayed()))
         }
@@ -75,7 +75,7 @@ class ResultsTest : BaseUiTest() {
 
     @Test
     fun a_clean_sweep_swaps_in_the_praise_card() =
-        inResults(finished(mapOf(1 to 2, 2 to 0), right = 2)) {
+        inResults(finished(mapOf(1 to 0, 2 to 0), right = 2)) {
             onView(
                 withText(
                     "Every answer correct. Questions you get right twice in a row come back less often.",
@@ -89,21 +89,21 @@ class ResultsTest : BaseUiTest() {
 
     @Test
     fun a_met_goal_is_called_out() = inResults(
-        finished(mapOf(1 to 2, 2 to 0), right = 2, goalTarget = 20, goalDone = 20, streak = 5),
+        finished(mapOf(1 to 0, 2 to 0), right = 2, goalTarget = 20, goalDone = 20, streak = 5),
     ) {
         onView(withText("Daily goal met · 5-day streak safe")).check(matches(isDisplayed()))
     }
 
     @Test
     fun an_unmet_goal_leaves_the_callout_out() =
-        inResults(finished(mapOf(1 to 2, 2 to 0), right = 2, goalDone = 3)) {
+        inResults(finished(mapOf(1 to 0, 2 to 0), right = 2, goalDone = 3)) {
             onView(withId(R.id.goal_met_card))
                 .check(matches(withEffectiveVisibility(Visibility.GONE)))
         }
 
     @Test
     fun practising_the_missed_set_starts_a_session_of_exactly_those() =
-        inResults(finished(mapOf(1 to 0, 2 to 0), right = 1)) {
+        inResults(finished(mapOf(1 to 1, 2 to 0), right = 1)) {
             onView(withText("Practise the 1 you missed")).perform(click())
             assertEquals(R.id.quizFragment, currentDestinationId())
             val session = progress().session!!
@@ -113,7 +113,7 @@ class ResultsTest : BaseUiTest() {
 
     @Test
     fun back_to_home_clears_the_finished_session() =
-        inResults(finished(mapOf(1 to 2, 2 to 0), right = 2)) {
+        inResults(finished(mapOf(1 to 0, 2 to 0), right = 2)) {
             onView(withText("Back to home")).perform(click())
             assertEquals(R.id.homeFragment, currentDestinationId())
             assertNull(progress().session)

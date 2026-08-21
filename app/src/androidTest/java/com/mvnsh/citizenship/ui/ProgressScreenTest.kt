@@ -52,10 +52,10 @@ class ProgressScreenTest : BaseUiTest() {
         onView(withText("You are scoring above the passing mark on recent questions."))
             .check(matches(isDisplayed()))
         onView(withId(R.id.stat_answered)).check(matches(withText("100")))
-        // 501 in the bank. Ids 1..40 are seeded but id 39 is not in the bank, so only 39
-        // of them are real questions - "not seen" counts the bank, not the seen map, and
-        // 462 rather than 461 is what proves it.
-        onView(withId(R.id.stat_remaining)).check(matches(withText("462")))
+        // 535 in the bank, 40 of them seen. The ids are contiguous now, so all 40 are
+        // real questions; "not seen" is still counted from the bank rather than from the
+        // size of the seen map, which is what keeps a stale record from inflating it.
+        onView(withId(R.id.stat_remaining)).check(matches(withText("495")))
         onView(withId(R.id.stat_best)).check(matches(withText("14")))
     }
 
@@ -96,7 +96,7 @@ class ProgressScreenTest : BaseUiTest() {
         onView(allOf(withId(R.id.topic_accuracy), hasSibling(withText("Economy"))))
             .perform(scrollTo())
             .check(matches(withText("—")))
-        onView(allOf(withId(R.id.topic_accuracy), hasSibling(withText("Rights & Responsibilities"))))
+        onView(allOf(withId(R.id.topic_accuracy), hasSibling(withText("Law and Justice"))))
             .perform(scrollTo())
             .check(matches(withText("75%")))
     }

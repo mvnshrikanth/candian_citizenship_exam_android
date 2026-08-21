@@ -34,13 +34,13 @@ class PracticeAndTopicsTest : BaseUiTest() {
         onView(allOf(withId(R.id.meta), hasSibling(withText("Quick practice"))))
             .check(matches(withText("10")))
         onView(allOf(withId(R.id.meta), hasSibling(withText("All questions"))))
-            .check(matches(withText("501")))
+            .check(matches(withText("535")))
         onView(allOf(withId(R.id.meta), hasSibling(withText("Weak questions"))))
             .check(matches(withText("2")))
         onView(allOf(withId(R.id.meta), hasSibling(withText("Bookmarked"))))
             .check(matches(withText("2")))
         onView(allOf(withId(R.id.meta), hasSibling(withText("New to you"))))
-            .check(matches(withText("498")))
+            .check(matches(withText("532")))
         onView(allOf(withId(R.id.meta), hasSibling(withText("By topic"))))
             .check(matches(withText("7")))
     }
@@ -102,12 +102,12 @@ class PracticeAndTopicsTest : BaseUiTest() {
 
     @Test
     fun topic_detail_shows_counts_and_the_question_list() = withProgress(
-        // ids 1 and 2 are both Rights & Responsibilities; id 2 was missed twice.
+        // ids 1 and 2 are both Law and Justice; id 2 was missed twice.
         ProgressState(onboarded = true, seen = mapOf(1 to SeenStat(2, 0), 2 to SeenStat(3, 2))),
     ) {
         onView(withId(R.id.topicsFragment)).perform(click())
-        onView(withText("Rights & Responsibilities")).perform(click())
-        onView(withId(R.id.cat_total)).check(matches(withText("43")))
+        onView(withText("Law and Justice")).perform(scrollTo(), click())
+        onView(withId(R.id.cat_total)).check(matches(withText("32")))
         onView(withId(R.id.cat_done)).check(matches(withText("2")))
         onView(withId(R.id.cat_accuracy)).check(matches(withText("60%")))
         onView(withText("Practise 20 questions")).check(matches(isDisplayed()))
@@ -120,13 +120,13 @@ class PracticeAndTopicsTest : BaseUiTest() {
         withProgress(ProgressState(onboarded = true)) {
             onView(withId(R.id.topicsFragment)).perform(click())
             onView(withText("Economy")).perform(scrollTo(), click())
-            // Economy holds only 14 questions, so the cap of 20 does not bite.
-            onView(withText("Practise 14 questions")).perform(click())
+            // Economy holds 19 questions, so the cap of 20 does not bite.
+            onView(withText("Practise 19 questions")).perform(click())
             assertEquals(R.id.quizFragment, currentDestinationId())
             val session = progress().session!!
             assertEquals("Economy", session.label)
             assertEquals("economy", session.topicKey)
-            assertEquals(14, session.ids.size)
+            assertEquals(19, session.ids.size)
         }
 
     @Test
