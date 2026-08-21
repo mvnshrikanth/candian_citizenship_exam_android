@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The design's grouped list: the divider between rows IS this background showing
+     through a 1dp gap, so the container is filled with the divider colour. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/md_outline_variant" />
+    <corners android:radius="@dimen/radius_md" />
+</shape>

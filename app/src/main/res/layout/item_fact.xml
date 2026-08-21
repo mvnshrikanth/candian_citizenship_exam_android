@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One row of a grouped list. Opaque, so the container's divider colour only shows
+     through the 1dp gap between neighbours. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurfaceContainerLowest"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/pad_card"
+    android:paddingTop="14dp"
+    android:paddingEnd="@dimen/pad_card"
+    android:paddingBottom="14dp">
+
+    <TextView
+        android:id="@+id/fact_label"
+        style="@style/Text.Body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/md_on_surface_variant"
+        tools:text="Questions" />
+
+    <TextView
+        android:id="@+id/fact_value"
+        style="@style/Text.Title.Row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:gravity="end"
+        tools:text="20" />
+</LinearLayout>

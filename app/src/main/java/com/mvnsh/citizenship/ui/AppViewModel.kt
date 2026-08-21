@@ -62,6 +62,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         retryLoad()
+        // Two sources keep the clock honest: the session, so starting or resuming a mock
+        // shows the right time on the same frame, and a tick, so it keeps moving. Without
+        // the first, the pill reads 0:00 until the next tick lands.
+        viewModelScope.launch { session.collect { _mockSecondsLeft.value = secondsLeft(it) } }
         viewModelScope.launch { tickMockTimer() }
     }
 
@@ -230,17 +234,21 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun tickMockTimer() {
         while (true) {
             val s = progress.value.session
-            val deadline = s?.deadlineEpochMs
-            if (s != null && s.timed && !s.submitted && deadline != null) {
-                val left = ((deadline - System.currentTimeMillis()) / 1000L).toInt()
-                _mockSecondsLeft.value = left.coerceAtLeast(0)
-                if (left <= 0) submitMock(auto = true)
-            } else {
-                _mockSecondsLeft.value = 0
-            }
+            _mockSecondsLeft.value = secondsLeft(s)
+            if (isRunningMock(s) && secondsLeft(s) <= 0) submitMock(auto = true)
             delay(TIMER_TICK_MS)
         }
     }
+
+    /** Seconds until the deadline, or zero when nothing timed is in flight. */
+    private fun secondsLeft(s: SessionState?): Int {
+        if (!isRunningMock(s)) return 0
+        val deadline = s?.deadlineEpochMs ?: return 0
+        return ((deadline - System.currentTimeMillis()) / 1000L).toInt().coerceAtLeast(0)
+    }
+
+    private fun isRunningMock(s: SessionState?): Boolean =
+        s != null && s.timed && !s.submitted && s.deadlineEpochMs != null
 
     // ---- bookmarks and weak list ---------------------------------------
 
