@@ -1,14 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/placeholder_title"
-        style="@style/Text.Headline.Screen"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Quiz" />
-</FrameLayout>
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/exit"
+            android:layout_width="@dimen/touch_min"
+            android:layout_height="@dimen/touch_min"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_exit_session"
+            android:padding="13dp"
+            android:src="@drawable/ic_arrow_left"
+            app:tint="@color/md_on_surface" />
+
+        <com.mvnsh.citizenship.ui.common.BarView
+            android:id="@+id/q_progress"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bar_thin"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            app:barFillColor="@color/md_primary"
+            app:barTrackColor="@color/md_surface_container_high" />
+
+        <TextView
+            android:id="@+id/q_counter"
+            style="@style/Text.Body.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFeatureSettings="tnum"
+            tools:text="1/20" />
+
+        <ImageButton
+            android:id="@+id/bookmark"
+            android:layout_width="@dimen/touch_min"
+            android:layout_height="@dimen/touch_min"
+            android:layout_marginStart="2dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="14dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_flag_outline"
+            app:tint="@color/md_outline" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_pad_h"
+        android:paddingEnd="@dimen/screen_pad_h"
+        android:paddingBottom="@dimen/screen_pad_h">
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/q_topic"
+                style="@style/Text.Cta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_topic_badge"
+                android:paddingStart="12dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/md_on_secondary_container"
+                android:textSize="12sp"
+                tools:text="Rights &amp; Responsibilities" />
+
+            <TextView
+                android:id="@+id/q_text"
+                style="@style/Text.Question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_card"
+                tools:text="Who is regulated by laws in Canada?" />
+
+            <!-- Four fixed rows: a LinearLayout keeps them out of the nested-scroll
+                 negotiation and lets each row keep its identity across a re-render, which
+                 is what makes the 180ms fill animation land on the right view. -->
+            <LinearLayout
+                android:id="@+id/options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_card"
+                android:orientation="vertical" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/explain_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_card"
+                android:visibility="gone"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:cardCornerRadius="@dimen/radius_md"
+                app:cardElevation="0dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/pad_card">
+
+                    <TextView
+                        android:id="@+id/explain_label"
+                        style="@style/Text.Overline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Why" />
+
+                    <TextView
+                        android:id="@+id/explain_body"
+                        style="@style/Text.Body.Loose"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        tools:text="The rule of law means everyone is regulated by law." />
+
+                    <View
+                        android:id="@+id/explain_divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/stroke_card"
+                        android:layout_marginTop="12dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <TextView
+                        android:id="@+id/explain_tip"
+                        style="@style/Text.Body.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        tools:text="Rule of law cuts both ways." />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/screen_pad_h"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/screen_pad_h"
+        android:paddingBottom="@dimen/screen_pad_bottom">
+
+        <TextView
+            android:id="@+id/seen_line"
+            style="@style/Text.Meta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/md_text_muted"
+            tools:text="First time seeing this" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/skip"
+            style="@style/Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quiz_skip" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/next_cta"
+            style="@style/Button.Cta.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:text="Next question"
+            tools:visibility="visible" />
+    </LinearLayout>
+</LinearLayout>

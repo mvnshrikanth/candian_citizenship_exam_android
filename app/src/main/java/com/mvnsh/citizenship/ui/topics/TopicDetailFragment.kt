@@ -19,6 +19,7 @@ import com.mvnsh.citizenship.domain.Topics
 import com.mvnsh.citizenship.ui.appViewModel
 import com.mvnsh.citizenship.ui.common.Motion
 import com.mvnsh.citizenship.ui.common.SpacingDecoration
+import com.mvnsh.citizenship.ui.common.applyBottomInset
 import com.mvnsh.citizenship.ui.common.applyTopInset
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -40,6 +41,9 @@ class TopicDetailFragment : Fragment(R.layout.fragment_topic_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentTopicDetailBinding.bind(view)
         binding.appBar.applyTopInset()
+        // Not a top-level destination, so the bottom nav is hidden and this screen owns
+        // the navigation-bar inset.
+        binding.scroll.applyBottomInset()
         Motion.rise(binding.content)
 
         binding.back.setOnClickListener { findNavController().navigateUp() }

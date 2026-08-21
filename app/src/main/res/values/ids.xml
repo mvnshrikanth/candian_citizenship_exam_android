@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Keys for View.setTag(int, Object). Declaring them keeps per-view state off the
+     single generic tag, which any other code is free to overwrite. -->
+<resources>
+    <item name="tag_fill_animator" type="id" />
+    <item name="tag_fill_colour" type="id" />
+</resources>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/option_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="@dimen/radius_md"
+    app:cardElevation="0dp"
+    app:strokeWidth="@dimen/stroke_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/pad_card_row">
+
+        <FrameLayout
+            android:id="@+id/marker"
+            android:layout_width="@dimen/marker_size"
+            android:layout_height="@dimen/marker_size"
+            android:background="@drawable/bg_marker_ring">
+
+            <TextView
+                android:id="@+id/marker_letter"
+                style="@style/Text.Cta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/md_on_surface_variant"
+                android:textSize="13sp"
+                tools:text="A" />
+
+            <ImageView
+                android:id="@+id/marker_icon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:visibility="gone"
+                tools:src="@drawable/ic_check"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/option_text"
+            style="@style/Text.Option"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            tools:text="Both A and B" />
+
+        <TextView
+            android:id="@+id/option_badge"
+            style="@style/Text.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            tools:text="Correct"
+            tools:visibility="visible" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -119,8 +119,30 @@
     <!-- The design shows an em dash for a topic with no attempts, never "0%". -->
     <string name="stat_none">—</string>
 
+    <!-- Quiz -->
+    <string name="quiz_counter">%1$d/%2$d</string>
+    <string name="quiz_skip">Skip</string>
+    <string name="quiz_next">Next question</string>
+    <string name="quiz_results">See results</string>
+    <string name="quiz_why">Why</string>
+    <string name="quiz_answer">Answer</string>
+    <string name="quiz_no_explanation">An explanation for this question hasn\'t been written yet. %1$s.</string>
+    <string name="quiz_seen">Seen %1$d×</string>
+    <string name="quiz_seen_missed">Seen %1$d× · missed %2$d×</string>
+    <string name="quiz_first_time">First time seeing this</string>
+    <string name="badge_correct">Correct</string>
+    <string name="badge_yours">Your pick</string>
+
+    <!-- Exit dialog -->
+    <string name="dlg_exit_title">Leave this session?</string>
+    <string name="dlg_exit_body">Your place is kept — you can pick it up from home. Nothing you\'ve answered is lost.</string>
+    <string name="dlg_exit_save">Save and exit</string>
+    <string name="dlg_exit_keep">Keep studying</string>
+    <string name="dlg_exit_discard">Discard the session</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
+    <string name="cd_exit_session">Leave session</string>
     <string name="cd_bookmark_add">Bookmark this question</string>
     <string name="cd_bookmark_remove">Remove bookmark</string>
     <string name="cd_search">Search questions</string>

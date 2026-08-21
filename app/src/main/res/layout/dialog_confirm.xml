@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The outer frame is only there to hold the design's 28dp side inset: a dialog window
+     laid out MATCH_PARENT cannot take a margin on its own root. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="28dp"
+    android:paddingEnd="28dp">
+
+    <LinearLayout
+        android:id="@+id/dialog_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            style="@style/Text.Headline.Dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Leave this session?" />
+
+        <TextView
+            android:id="@+id/dialog_body"
+            style="@style/Text.Body.Loose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/md_on_surface_variant"
+            tools:text="Your place is kept." />
+
+        <LinearLayout
+            android:id="@+id/dialog_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical" />
+    </LinearLayout>
+</FrameLayout>
