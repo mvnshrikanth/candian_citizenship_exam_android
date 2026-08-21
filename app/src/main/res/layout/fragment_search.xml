@@ -1,14 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/placeholder_title"
-        style="@style/Text.Headline.Screen"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Search" />
-</FrameLayout>
+        android:paddingStart="@dimen/screen_pad_h"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/screen_pad_h"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:cardCornerRadius="@dimen/radius_pill"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="6dp">
+
+                <ImageButton
+                    android:id="@+id/back"
+                    android:layout_width="@dimen/touch_min"
+                    android:layout_height="@dimen/touch_min"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_back"
+                    android:padding="14dp"
+                    android:src="@drawable/ic_arrow_left"
+                    app:tint="@color/md_on_surface_variant" />
+
+                <EditText
+                    android:id="@+id/query"
+                    style="@style/Text.Option"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:imeOptions="actionSearch"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColorHint="@color/md_on_surface_variant"
+                    tools:hint="Search 501 questions" />
+
+                <ImageButton
+                    android:id="@+id/clear"
+                    android:layout_width="@dimen/touch_min"
+                    android:layout_height="@dimen/touch_min"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_clear_search"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_close"
+                    android:visibility="gone"
+                    app:tint="@color/md_on_surface_variant"
+                    tools:visibility="visible" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_pad_h"
+        android:paddingEnd="@dimen/screen_pad_h"
+        android:paddingBottom="@dimen/screen_pad_bottom">
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/idle_hint"
+                style="@style/Text.Body.Loose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/search_idle"
+                android:textColor="@color/md_text_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/hit_count"
+                style="@style/Text.Meta.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:text="30+ results"
+                tools:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_search_hit" />
+
+            <include
+                android:id="@+id/empty"
+                layout="@layout/view_empty_state" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

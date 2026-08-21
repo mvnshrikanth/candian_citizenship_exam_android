@@ -159,8 +159,76 @@
     <string name="results_practise_missed">Practise the %1$d you missed</string>
     <string name="results_back_home">Back to home</string>
 
+    <!-- Mock test, verbatim from the design. -->
+    <string name="mock_title">Mock test</string>
+    <string name="mock_headline">Same shape as the real test</string>
+    <string name="mock_fact_questions">Questions</string>
+    <string name="mock_fact_time">Time limit</string>
+    <string name="mock_fact_pass">To pass</string>
+    <string name="mock_fact_answers">Answers</string>
+    <string name="mock_fact_questions_value">%1$d</string>
+    <string name="mock_fact_time_value">%1$d minutes</string>
+    <string name="mock_fact_pass_value">%1$d correct</string>
+    <string name="mock_fact_answers_value">Changeable until you submit</string>
+    <string name="mock_note">No feedback during the test. You can move between questions freely, and the timer keeps running if you leave the app.</string>
+    <string name="mock_attempts_label">Your last attempts</string>
+    <string name="mock_attempt_name">Mock test %1$d</string>
+    <string name="mock_start">Start the test</string>
+
+    <string name="mock_back">Back</string>
+    <string name="mock_next">Next</string>
+    <string name="mock_submit">Submit test</string>
+    <string name="mock_submit_partial">Submit (%1$d/%2$d)</string>
+
+    <string name="nav_sheet_title">Jump to question</string>
+    <string name="nav_sheet_answered">%1$d of %2$d answered</string>
+    <string name="nav_sheet_keep">Keep going</string>
+
+    <string name="mock_pass_headline">You would have passed</string>
+    <string name="mock_pass_note">Fifteen correct is the passing mark. Keep the streak going and take another in a few days.</string>
+    <string name="mock_fail_headline">Close — %1$d of %2$d is the bar</string>
+    <string name="mock_fail_note">You needed %1$d more. The questions you missed are now in your weak list.</string>
+    <string name="mock_result_of">of %1$d · %2$d%%</string>
+    <string name="mock_stat_correct">correct</string>
+    <string name="mock_stat_wrong">wrong</string>
+    <string name="mock_stat_of_thirty">of %1$d</string>
+    <string name="mock_review_cta">Review all %1$d answers</string>
+    <string name="mock_practise_weak">Practise weak areas</string>
+    <string name="mock_retake">Retake</string>
+
+    <string name="review_title">Review · %1$d of %2$d</string>
+    <string name="review_position">%1$d · %2$s</string>
+    <string name="review_not_answered">Not answered</string>
+
+    <!-- Weak list -->
+    <string name="weak_title">Weak questions</string>
+    <string name="weak_headline">You have %1$d questions you keep missing.</string>
+    <string name="weak_practise">Practise these now</string>
+    <string name="weak_missed">Missed %1$d×</string>
+    <string name="weak_bookmark">Bookmark</string>
+    <string name="weak_known">I know this now</string>
+    <string name="weak_empty_title">Nothing to review</string>
+    <string name="weak_empty_body">Questions land here after you miss them twice. Keep practising and this list will fill itself in.</string>
+    <string name="weak_empty_cta">Quick practice</string>
+
+    <!-- Bookmarks -->
+    <string name="bookmarks_title">Bookmarks</string>
+    <string name="bookmarks_practise">Practise bookmarked</string>
+    <string name="bookmarks_empty_title">No bookmarks yet</string>
+    <string name="bookmarks_empty_body">Tap the flag on any question to keep it here — useful for facts you want to reread the night before.</string>
+
+    <!-- Search -->
+    <string name="search_idle">Search the whole bank by wording or by answer — useful when you half-remember a fact and want the question it belongs to.</string>
+    <string name="search_results">%1$d results</string>
+    <string name="search_results_capped">%1$d+ results</string>
+    <string name="search_empty_title">No question matches that</string>
+    <string name="search_empty_body">Try a single word — "Charter", "Governor", "treaty" — or browse by topic instead.</string>
+    <string name="search_browse_topics">Browse topics</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_navigator">Jump to question</string>
     <string name="cd_exit_session">Leave session</string>
     <string name="cd_bookmark_add">Bookmark this question</string>
     <string name="cd_bookmark_remove">Remove bookmark</string>
