@@ -1,5 +1,6 @@
 package com.mvnsh.citizenship.ui
 
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -27,11 +28,30 @@ abstract class BaseUiTest {
         runBlocking { app().progressRepository.replace(state) }
         scenario = ActivityScenario.launch(MainActivity::class.java)
         try {
+            awaitBankLoaded()
             block()
         } finally {
             scenario?.close()
             scenario = null
         }
+    }
+
+    /**
+     * The bank is parsed off the main thread, so Espresso's idling does not cover it and
+     * an assertion can otherwise race a screen that has not received its questions yet.
+     */
+    private fun awaitBankLoaded(timeoutMs: Long = 10_000) {
+        val deadline = System.currentTimeMillis() + timeoutMs
+        while (System.currentTimeMillis() < deadline) {
+            var settled = false
+            rule.onActivity { activity ->
+                val vm = ViewModelProvider(activity)[AppViewModel::class.java]
+                settled = vm.bank.value != null || vm.loadFailed.value
+            }
+            if (settled) return
+            Thread.sleep(25)
+        }
+        throw AssertionError("the question bank did not load within ${timeoutMs}ms")
     }
 
     /** Convenience for the common "past onboarding, nothing else set" case. */

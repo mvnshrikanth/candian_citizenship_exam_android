@@ -50,6 +50,43 @@
     <string name="ob_step3_body">Twenty questions, thirty minutes, fifteen to pass — the same shape as the real test.</string>
     <string name="ob_cta_3">Start studying</string>
 
+    <!-- Home, verbatim from the design. The greeting is the one exception: the design
+         hardcodes "Good morning", this app picks by the hour (see HomeFragment). -->
+    <string name="home_greeting_morning">Good morning</string>
+    <string name="home_greeting_afternoon">Good afternoon</string>
+    <string name="home_greeting_evening">Good evening</string>
+    <string name="home_day_line">Day %1$d of studying</string>
+    <string name="home_ready">Ready when you are</string>
+
+    <string name="home_goal_title">Today\'s goal</string>
+    <string name="home_goal_target">/ %1$d questions</string>
+    <string name="home_goal_met">Goal met · well done</string>
+    <string name="home_goal_left">%1$d to go · about %2$d minutes</string>
+    <string name="home_streak_days">%1$d days</string>
+
+    <string name="home_resume">Resume session</string>
+    <string name="home_resume_sub">%1$s · question %2$d of %3$d</string>
+    <string name="home_start">Start studying</string>
+    <string name="home_start_sub">%1$d questions · about %2$d minutes</string>
+
+    <string name="home_weak">Weak questions</string>
+    <string name="home_mock">Mock test</string>
+    <string name="home_mock_sub">%1$d questions · %2$d min</string>
+
+    <string name="home_days">Days</string>
+    <string name="home_test_on">Test on %1$s</string>
+    <string name="home_pace_on">On pace — %1$d%% accuracy</string>
+    <string name="home_pace_keep">Keep going — %1$d%% accuracy</string>
+    <string name="home_pace_none">No answers yet</string>
+    <string name="home_add_date">Add your test date</string>
+    <string name="home_add_date_sub">We\'ll pace the practice to it</string>
+
+    <string name="home_weakest">Weakest topic</string>
+    <string name="home_weakest_accuracy">%1$d%% accuracy</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
+    <string name="cd_search">Search questions</string>
+    <string name="cd_settings">Settings</string>
+    <string name="cd_goal_progress">Daily goal, %1$d of %2$d questions</string>
 </resources>

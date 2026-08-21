@@ -27,4 +27,6 @@
     <color name="md_inverse_on_surface">#372F2D</color>
     <color name="md_scrim_32">#52000000</color>
     <color name="md_goal_track">#2EFFDBD1</color>
+    <!-- 18% of on-primary: the disc behind the home CTA's chevron. -->
+    <color name="md_on_primary_18">#2E561F0F</color>
 </resources>
