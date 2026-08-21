@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.IdlingPolicies
 import com.mvnsh.citizenship.CitizenshipApp
 import com.mvnsh.citizenship.MainActivity
 import com.mvnsh.citizenship.R
 import com.mvnsh.citizenship.data.model.ProgressState
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
@@ -28,8 +30,20 @@ abstract class BaseUiTest {
 
     protected fun app(): CitizenshipApp = ApplicationProvider.getApplicationContext()
 
+    private companion object {
+        const val IDLE_TIMEOUT_SECONDS = 60L
+    }
+
     /** Seeds state, launches the Activity, runs [block], then tears down. */
     protected fun withProgress(state: ProgressState, block: () -> Unit) {
+        // Espresso gives the UI thread 5s to go idle before it gives up on an action.
+        // That is generous on real hardware and not always enough on this emulator, which
+        // has been measured taking 48s to first frame; when it is exceeded the action
+        // fails and every later one reports NoActivityResumedException, which reads like
+        // a broken screen rather than a slow machine.
+        IdlingPolicies.setMasterPolicyTimeout(IDLE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        IdlingPolicies.setIdlingResourceTimeout(IDLE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+
         runBlocking { app().progressRepository.replace(state) }
         scenario = ActivityScenario.launch(MainActivity::class.java)
         try {
@@ -52,7 +66,7 @@ abstract class BaseUiTest {
      * every action with NoActivityResumedException, which reads like a broken screen
      * rather than a slow one.
      */
-    private fun awaitReady(timeoutMs: Long = 30_000) {
+    protected fun awaitReady(timeoutMs: Long = 30_000) {
         val deadline = System.currentTimeMillis() + timeoutMs
         var lastState: Lifecycle.State? = null
         while (System.currentTimeMillis() < deadline) {

@@ -33,7 +33,7 @@ class ReviewFragment : Fragment(R.layout.fragment_review) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentReviewBinding.bind(view)
         binding.appBar.applyTopInset()
-        binding.reviewList.applyBottomInset()
+        binding.screen.applyBottomInset()  // see SettingsFragment: the scroll container must end above the navigation bar
         Motion.rise(binding.reviewList)
 
         binding.back.setOnClickListener { findNavController().navigateUp() }

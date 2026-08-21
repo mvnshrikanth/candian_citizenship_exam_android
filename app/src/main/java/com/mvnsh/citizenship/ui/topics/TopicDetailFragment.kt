@@ -43,7 +43,7 @@ class TopicDetailFragment : Fragment(R.layout.fragment_topic_detail) {
         binding.appBar.applyTopInset()
         // Not a top-level destination, so the bottom nav is hidden and this screen owns
         // the navigation-bar inset.
-        binding.scroll.applyBottomInset()
+        binding.screen.applyBottomInset()  // see SettingsFragment: the scroll container must end above the navigation bar
         Motion.rise(binding.content)
 
         binding.back.setOnClickListener { findNavController().navigateUp() }

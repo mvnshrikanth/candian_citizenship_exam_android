@@ -48,7 +48,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSearchBinding.bind(view)
         binding.appBar.applyTopInset()
-        binding.scroll.applyBottomInset()
+        binding.screen.applyBottomInset()  // see SettingsFragment: the scroll container must end above the navigation bar
         Motion.rise(binding.content)
 
         binding.back.setOnClickListener { findNavController().navigateUp() }

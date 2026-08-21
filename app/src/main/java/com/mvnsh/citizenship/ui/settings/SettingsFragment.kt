@@ -64,7 +64,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSettingsBinding.bind(view)
         binding.appBar.applyTopInset()
-        binding.scroll.applyBottomInset()
+        // The inset goes on the screen, not on the scroll view's padding. With
+        // clipToPadding="false" the scroll view's bounds run under the navigation bar, and
+        // requestRectangleOnScreen - which is what scrollTo and accessibility focus both
+        // use - scrolls only far enough to put a row inside those bounds. That parks a
+        // tappable row under the bar, where the system takes the touch and the row simply
+        // never responds. Ending the scroll container above the bar makes that impossible.
+        binding.screen.applyBottomInset()
         Motion.rise(binding.content)
 
         binding.back.setOnClickListener { findNavController().navigateUp() }

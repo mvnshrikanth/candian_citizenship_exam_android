@@ -51,6 +51,7 @@ class SettingsTest : BaseUiTest() {
 
     private fun inSettings(state: ProgressState, block: () -> Unit) = withProgress(state) {
         navigateTo(R.id.settingsFragment)
+        awaitReady()
         block()
     }
 
