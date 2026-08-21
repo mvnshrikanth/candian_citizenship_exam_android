@@ -225,8 +225,30 @@
     <string name="search_empty_body">Try a single word — "Charter", "Governor", "treaty" — or browse by topic instead.</string>
     <string name="search_browse_topics">Browse topics</string>
 
+    <!-- Progress -->
+    <string name="progress_title">Progress</string>
+    <string name="progress_accuracy_label">overall accuracy</string>
+    <string name="progress_verdict_ready">Test ready</string>
+    <string name="progress_verdict_nearly">Nearly there</string>
+    <string name="progress_verdict_keep">Keep practising</string>
+    <string name="progress_verdict_start">Just starting</string>
+    <string name="progress_note_good">You are scoring above the passing mark on recent questions.</string>
+    <string name="progress_note_bar">The passing mark is %1$d of %2$d — about %3$d%%.</string>
+    <string name="progress_stat_answered">answered</string>
+    <string name="progress_stat_unseen">not seen</string>
+    <string name="progress_stat_best">best streak</string>
+    <string name="progress_week">This week</string>
+    <string name="progress_by_topic">By topic</string>
+    <string name="progress_milestones">Milestones</string>
+    <string name="progress_miles_count">%1$d of %2$d</string>
+    <string name="progress_mocks">Mock tests</string>
+    <string name="progress_empty_title">Nothing measured yet</string>
+    <string name="progress_empty_body">Answer your first ten questions and this page will show accuracy, weak topics and how ready you are.</string>
+    <string name="progress_empty_cta">Start practising</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Go back</string>
+    <string name="cd_week_bar">%1$s: %2$d questions</string>
     <string name="cd_clear_search">Clear search</string>
     <string name="cd_navigator">Jump to question</string>
     <string name="cd_exit_session">Leave session</string>

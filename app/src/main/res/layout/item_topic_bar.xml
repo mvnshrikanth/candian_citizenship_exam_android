@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Flat, so a bar can be addressed as "the accuracy next to this topic name". -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/topic_name"
+        style="@style/Text.Meta"
+        android:layout_width="104dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Rights &amp; Responsibilities" />
+
+    <com.mvnsh.citizenship.ui.common.BarView
+        android:id="@+id/topic_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bar_thin"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:barFillColor="@color/md_secondary"
+        app:barTrackColor="@color/md_surface_container_high"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/topic_accuracy"
+        app:layout_constraintStart_toEndOf="@id/topic_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/topic_accuracy"
+        style="@style/Text.Meta.Small"
+        android:layout_width="34dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="75%" />
+</androidx.constraintlayout.widget.ConstraintLayout>
