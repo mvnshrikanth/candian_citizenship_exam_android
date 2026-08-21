@@ -14,13 +14,19 @@ class ProgressStateSerializationTest {
     @Test
     fun round_trips_without_loss() {
         val original = ProgressState(
-            onboarded = true, answered = 340, correct = 279,
-            seen = mapOf(1 to SeenStat(2, 1), 502 to SeenStat(1, 0)),
-            mocks = listOf(MockAttempt(70, "2026-08-09"), MockAttempt(85, "2026-08-17")),
+            onboarded = true,
+            seen = mapOf(
+                1 to SeenStat(2, 1, "2026-08-18T14:03:22.481Z"),
+                502 to SeenStat(1, 0, "2026-08-17T09:00:00Z"),
+            ),
+            mocks = listOf(
+                MockAttempt(70, "2026-08-09T11:00:00Z"),
+                MockAttempt(85, "2026-08-17T18:30:00Z"),
+            ),
             bookmarks = listOf(2, 7, 10, 44, 120),
             goalTarget = 30, goalDone = 14, goalDate = "2026-08-18",
-            streak = 12, best = 14, lastDay = "2026-08-17", testDate = "2026-09-25",
-            theme = "Dark", week = listOf(12, 16, 20, 18, 22, 14, 14), weekDate = "2026-08-18",
+            testDate = "2026-09-25",
+            theme = "Dark",
             session = SessionState(
                 mode = "MOCK", label = "Mock test", ids = listOf(3, 9, 12),
                 index = 1, marks = mapOf(3 to 2), startedAtEpochMs = 1_760_000_000_000,
@@ -36,10 +42,9 @@ class ProgressStateSerializationTest {
         assertEquals(ProgressState(), fresh)
         assertEquals(false, fresh.onboarded)
         assertEquals(20, fresh.goalTarget)
-        assertEquals(0, fresh.streak)
-        assertEquals(listOf(0, 0, 0, 0, 0, 0, 0), fresh.week)
         assertNull(fresh.session)
-        assertNull(fresh.lastDay)
+        assertNull(fresh.testDate)
+        assertEquals(emptyMap<Int, SeenStat>(), fresh.seen)
         assertEquals(true, fresh.notif.daily)
         assertEquals(false, fresh.notif.streak)
         assertEquals("System", fresh.theme)
@@ -55,19 +60,27 @@ class ProgressStateSerializationTest {
     }
 
     @Test
-    fun an_older_blob_missing_newer_fields_still_loads() {
-        val old = """{"onboarded":true,"answered":5,"correct":4,"goalTarget":10}"""
+    fun a_blob_from_the_build_that_stored_totals_still_loads() {
+        // Those fields are derived now. An upgrading user's blob still carries them, and
+        // ignoreUnknownKeys is what stops that being a crash on first launch after update.
+        val old = """{"onboarded":true,"answered":5,"correct":4,"streak":12,"best":14,"lastDay":"2026-08-17","week":[1,2,3,4,5,6,7],"weekDate":"2026-08-18","goalTarget":10}"""
         val out = ProgressState.decode(old)
         assertEquals(true, out.onboarded)
-        assertEquals(5, out.answered)
         assertEquals(10, out.goalTarget)
         assertEquals("defaults fill the gap", "System", out.theme)
-        assertEquals("", out.weekDate)
+    }
+
+    @Test
+    fun a_seen_record_without_a_timestamp_still_loads() {
+        // Everything written before sync existed looks like this.
+        val out = ProgressState.decode("""{"seen":{"7":{"s":3,"m":1}}}""")
+        assertEquals(SeenStat(3, 1, null), out.seen.getValue(7))
     }
 
     @Test
     fun an_unknown_field_from_a_newer_build_is_ignored() {
-        assertEquals(3, ProgressState.decode("""{"answered":3,"somethingNew":{"a":1}}""").answered)
+        val out = ProgressState.decode("""{"goalTarget":30,"somethingNew":{"a":1}}""")
+        assertEquals(30, out.goalTarget)
     }
 
     @Test
@@ -79,12 +92,13 @@ class ProgressStateSerializationTest {
     @Test
     fun a_full_bank_of_seen_records_stays_a_reasonable_size() {
         // Every question answered twice is the realistic worst case for blob size.
+        // Every question answered twice, each carrying a timestamp - the realistic worst
+        // case now that records are stamped for sync.
         val heavy = ProgressState(
-            answered = 1002, correct = 800,
-            seen = (1..502).associateWith { SeenStat(2, 1) },
+            seen = (1..535).associateWith { SeenStat(2, 1, "2026-08-18T14:03:22.481Z") },
         )
         val encoded = ProgressState.encode(heavy)
         assertEquals(heavy, ProgressState.decode(encoded))
-        assertTrue("blob grew to ${encoded.length} chars", encoded.length < 30_000)
+        assertTrue("blob grew to ${encoded.length} chars", encoded.length < 60_000)
     }
 }

@@ -17,12 +17,14 @@ import com.mvnsh.citizenship.data.model.ProgressState
 import com.mvnsh.citizenship.data.model.SessionState
 import com.mvnsh.citizenship.databinding.FragmentResultsBinding
 import com.mvnsh.citizenship.domain.DateUtils
+import com.mvnsh.citizenship.domain.Stats
 import com.mvnsh.citizenship.domain.Topics
 import com.mvnsh.citizenship.ui.appViewModel
 import com.mvnsh.citizenship.ui.common.Motion
 import com.mvnsh.citizenship.ui.common.SpacingDecoration
 import com.mvnsh.citizenship.ui.common.applyBottomInset
 import com.mvnsh.citizenship.ui.common.applyTopInset
+import java.time.LocalDate
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -104,7 +106,8 @@ class ResultsFragment : Fragment(R.layout.fragment_results) {
         val metToday = p.goalDate == DateUtils.today() && p.goalDone >= p.goalTarget
         binding.goalMetCard.isVisible = metToday
         if (metToday) {
-            binding.goalMetText.text = getString(R.string.results_goal_met, p.streak)
+            binding.goalMetText.text =
+                getString(R.string.results_goal_met, Stats.streak(p, LocalDate.now()))
         }
     }
 

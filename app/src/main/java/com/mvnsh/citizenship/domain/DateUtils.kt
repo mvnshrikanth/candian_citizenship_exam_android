@@ -1,7 +1,9 @@
 package com.mvnsh.citizenship.domain
 
 import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -23,10 +25,11 @@ object DateUtils {
     fun shiftDay(n: Int, clock: Clock = Clock.systemDefaultZone()): String =
         LocalDate.now(clock).plusDays(n.toLong()).toString()
 
-    fun fmtDate(iso: String?): String =
-        iso?.takeIf { it.isNotBlank() }
-            ?.let { runCatching { LocalDate.parse(it).format(LONG) }.getOrDefault("") }
-            ?: ""
+    /**
+     * Formats either a bare "YYYY-MM-DD" or a full ISO-8601 instant, because mock attempts
+     * now carry an instant (the shape the web app writes) while test dates stay bare days.
+     */
+    fun fmtDate(iso: String?): String = localDayOf(iso)?.format(LONG) ?: ""
 
     /** Clamped at zero: a past test date reads as "0 days", never negative. */
     fun daysTo(iso: String, clock: Clock = Clock.systemDefaultZone()): Int {
@@ -35,6 +38,30 @@ object DateUtils {
         }.getOrDefault(0L)
         return days.coerceAtLeast(0L).toInt()
     }
+
+    /**
+     * "Now" as an ISO-8601 UTC instant, e.g. "2026-08-21T14:03:22.481Z".
+     *
+     * This is the exact shape the web app writes into `lastAttempted`
+     * (`new Date().toISOString()`), and both platforms derive the streak and the weekly
+     * chart from those strings, so the format is a contract rather than a preference.
+     */
+    fun nowIso(clock: Clock = Clock.systemDefaultZone()): String = Instant.now(clock).toString()
+
+    /**
+     * The local calendar day an ISO-8601 instant falls on, or null if it will not parse.
+     *
+     * Local, not UTC, and deliberately so: the web uses `new Date(iso).toDateString()`,
+     * which is the browser's local day. Reading these as UTC would put the two platforms
+     * a day apart either side of midnight.
+     */
+    fun localDayOf(iso: String?, zone: ZoneId = ZoneId.systemDefault()): LocalDate? =
+        iso?.takeIf { it.isNotBlank() }?.let { text ->
+            runCatching { Instant.parse(text).atZone(zone).toLocalDate() }
+                // Tolerate a bare "YYYY-MM-DD", which older Android blobs may carry.
+                .recoverCatching { LocalDate.parse(text) }
+                .getOrNull()
+        }
 
     fun mmss(seconds: Int): String {
         val s = seconds.coerceAtLeast(0)

@@ -14,6 +14,7 @@ import com.mvnsh.citizenship.R
 import com.mvnsh.citizenship.data.model.ProgressState
 import com.mvnsh.citizenship.data.model.SeenStat
 import com.mvnsh.citizenship.data.model.SessionState
+import com.mvnsh.citizenship.domain.Stats
 import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -60,8 +61,8 @@ class QuizTest : BaseUiTest() {
             onView(withText("Next question")).check(matches(isDisplayed()))
             onView(withId(R.id.skip))
                 .check(matches(withEffectiveVisibility(Visibility.GONE)))
-            assertEquals(1, progress().correct)
-            assertEquals(1, progress().answered)
+            assertEquals(1, Stats.correct(progress()))
+            assertEquals(1, Stats.answered(progress()))
         }
 
     @Test
@@ -70,8 +71,8 @@ class QuizTest : BaseUiTest() {
         onView(withText("Your pick")).perform(scrollTo()).check(matches(isDisplayed()))
         onView(withText("Correct")).check(matches(isDisplayed()))
         val p = progress()
-        assertEquals(1, p.answered)
-        assertEquals(0, p.correct)
+        assertEquals(1, Stats.answered(p))
+        assertEquals(0, Stats.correct(p))
         assertEquals(1, p.seen[1]!!.m)
     }
 
@@ -79,7 +80,7 @@ class QuizTest : BaseUiTest() {
     fun tapping_a_second_option_after_revealing_changes_nothing() = inQuiz(startedQuiz(1, 2)) {
         onView(withText("Only individual citizens")).perform(scrollTo(), click())
         onView(withText("Only government officials and politicians")).perform(scrollTo(), click())
-        assertEquals("a revealed question is locked", 1, progress().answered)
+        assertEquals("a revealed question is locked", 1, Stats.answered(progress()))
         assertEquals("and counted exactly once", 1, progress().seen[1]!!.s)
     }
 
@@ -110,7 +111,7 @@ class QuizTest : BaseUiTest() {
     fun skip_advances_without_recording_an_answer() = inQuiz(startedQuiz(1, 2)) {
         onView(withId(R.id.skip)).perform(click())
         onView(withId(R.id.q_counter)).check(matches(withText("2/2")))
-        assertEquals(0, progress().answered)
+        assertEquals(0, Stats.answered(progress()))
     }
 
     @Test

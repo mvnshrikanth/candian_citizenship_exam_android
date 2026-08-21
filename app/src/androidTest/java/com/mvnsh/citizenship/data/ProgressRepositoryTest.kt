@@ -45,12 +45,12 @@ class ProgressRepositoryTest {
     fun a_mutation_survives_a_new_repository_instance() = runBlocking {
         val first = ProgressRepository(store, scope)
         first.awaitLoaded()
-        first.mutate { it.copy(answered = 7, seen = mapOf(4 to SeenStat(1, 1))) }
+        first.mutate { it.copy(goalDone = 7, seen = mapOf(4 to SeenStat(1, 1))) }
         first.flush()
 
         val second = ProgressRepository(store, scope)
         val restored = second.awaitLoaded()
-        assertEquals(7, restored.answered)
+        assertEquals(7, restored.goalDone)
         assertEquals(SeenStat(1, 1), restored.seen[4])
     }
 
@@ -58,36 +58,36 @@ class ProgressRepositoryTest {
     fun a_burst_of_mutations_settles_on_the_last_value() = runBlocking {
         val repo = ProgressRepository(store, scope)
         repo.awaitLoaded()
-        repeat(50) { n -> repo.mutate { it.copy(answered = n + 1) } }
-        assertEquals("memory is immediate", 50, repo.state.value.answered)
+        repeat(50) { n -> repo.mutate { it.copy(goalDone = n + 1) } }
+        assertEquals("memory is immediate", 50, repo.state.value.goalDone)
         repo.flush()
 
         val reloaded = ProgressRepository(store, scope)
-        assertEquals(50, reloaded.awaitLoaded().answered)
+        assertEquals(50, reloaded.awaitLoaded().goalDone)
     }
 
     @Test
     fun a_debounced_write_lands_without_an_explicit_flush() = runBlocking {
         val repo = ProgressRepository(store, scope)
         repo.awaitLoaded()
-        repo.mutate { it.copy(streak = 9) }
+        repo.mutate { it.copy(goalDone = 9) }
         delay(ProgressRepository.WRITE_DEBOUNCE_MS * 4)
 
         val reloaded = ProgressRepository(store, scope)
-        assertEquals(9, reloaded.awaitLoaded().streak)
+        assertEquals(9, reloaded.awaitLoaded().goalDone)
     }
 
     @Test
     fun replace_overwrites_everything_immediately() = runBlocking {
         val repo = ProgressRepository(store, scope)
         repo.awaitLoaded()
-        repo.mutate { it.copy(answered = 100, bookmarks = listOf(1, 2, 3)) }
+        repo.mutate { it.copy(goalDone = 100, bookmarks = listOf(1, 2, 3)) }
         repo.flush()
 
         repo.replace(ProgressState(onboarded = true))
         val reloaded = ProgressRepository(store, scope)
         val restored = reloaded.awaitLoaded()
-        assertEquals(0, restored.answered)
+        assertEquals(0, restored.goalDone)
         assertTrue(restored.bookmarks.isEmpty())
         assertTrue(restored.onboarded)
     }

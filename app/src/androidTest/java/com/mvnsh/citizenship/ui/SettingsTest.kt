@@ -17,6 +17,7 @@ import com.mvnsh.citizenship.data.model.MockAttempt
 import com.mvnsh.citizenship.data.model.ProgressState
 import com.mvnsh.citizenship.data.model.SeenStat
 import com.mvnsh.citizenship.domain.DateUtils
+import com.mvnsh.citizenship.domain.Stats
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.After
@@ -26,6 +27,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
 
 @RunWith(AndroidJUnit4::class)
 class SettingsTest : BaseUiTest() {
@@ -121,8 +123,7 @@ class SettingsTest : BaseUiTest() {
     @Test
     fun reset_clears_progress_but_keeps_bookmarks() = inSettings(
         ProgressState(
-            onboarded = true, answered = 340, correct = 279, streak = 12,
-            seen = mapOf(1 to SeenStat(3, 2)), bookmarks = listOf(2, 7),
+            onboarded = true, seen = seenRecords(340, 279, days = 12), bookmarks = listOf(2, 7),
             mocks = listOf(MockAttempt(85, DateUtils.today())),
         ),
     ) {
@@ -131,10 +132,10 @@ class SettingsTest : BaseUiTest() {
         onView(withText(containsString("Bookmarks are kept"))).check(matches(isDisplayed()))
         onView(withText("Reset everything")).perform(click())
 
-        awaitProgress { it.answered == 0 }
+        awaitProgress { it.seen.isEmpty() }
         val p = progress()
-        assertEquals(0, p.answered)
-        assertEquals(0, p.streak)
+        assertEquals(0, Stats.answered(p))
+        assertEquals(0, Stats.streak(p, LocalDate.now()))
         assertTrue(p.mocks.isEmpty())
         assertTrue(p.seen.isEmpty())
         assertEquals("bookmarks survive", listOf(2, 7), p.bookmarks)
@@ -143,20 +144,20 @@ class SettingsTest : BaseUiTest() {
 
     @Test
     fun cancelling_reset_changes_nothing() =
-        inSettings(ProgressState(onboarded = true, answered = 340)) {
+        inSettings(ProgressState(onboarded = true, seen = seenRecords(340, 279))) {
             onView(settingRow("Reset all progress")).perform(scrollTo(), click())
             onView(withText("Cancel")).perform(click())
-            assertEquals(340, progress().answered)
+            assertEquals(340, Stats.answered(progress()))
         }
 
     @Test
     fun clearing_bookmarks_leaves_progress_alone() = inSettings(
-        ProgressState(onboarded = true, answered = 50, bookmarks = listOf(1, 2, 3)),
+        ProgressState(onboarded = true, seen = seenRecords(50, 40), bookmarks = listOf(1, 2, 3)),
     ) {
         onView(settingRow("Clear bookmarks")).perform(scrollTo(), click())
         onView(withText("Clear them")).perform(click())
         assertTrue(progress().bookmarks.isEmpty())
-        assertEquals(50, progress().answered)
+        assertEquals(50, Stats.answered(progress()))
     }
 
     @Test
@@ -179,15 +180,21 @@ class SettingsTest : BaseUiTest() {
     fun the_debug_only_seeder_produces_a_usable_dataset() =
         inSettings(ProgressState(onboarded = true)) {
             onView(settingRow("Load demo data")).perform(scrollTo(), click())
-            awaitProgress { it.answered == 340 }
+            awaitProgress { it.seen.size == 340 }
             val p = progress()
-            assertEquals(340, p.answered)
-            assertEquals(279, p.correct)
+            // Totals are derived, so the demo is asserted on the shape it is meant to
+            // produce - a substantial history with a running streak and past mocks -
+            // rather than on constants that used to be stored alongside a map that
+            // disagreed with them.
+            assertEquals(340, p.seen.size)
+            assertTrue("a demo worth looking at", Stats.answered(p) >= 340)
+            assertTrue("and not a perfect one", Stats.correct(p) < Stats.answered(p))
+            assertEquals(12, Stats.streak(p, LocalDate.now()))
             assertEquals(3, p.mocks.size)
             assertEquals(listOf(2, 7, 10, 44, 120), p.bookmarks)
 
             onView(settingRow("Reset to fresh install")).perform(scrollTo(), click())
-            awaitProgress { it.answered == 0 }
+            awaitProgress { it.seen.isEmpty() }
             assertFalse("a fresh install has not been onboarded", progress().onboarded)
         }
 }

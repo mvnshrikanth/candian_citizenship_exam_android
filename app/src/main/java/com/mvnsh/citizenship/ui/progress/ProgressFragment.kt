@@ -25,6 +25,7 @@ import com.mvnsh.citizenship.ui.common.SpacingDecoration
 import com.mvnsh.citizenship.ui.common.applyTopInset
 import com.mvnsh.citizenship.ui.mock.MockAttemptAdapter
 import com.mvnsh.citizenship.ui.mock.MockAttemptRow
+import java.time.LocalDate
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -79,13 +80,13 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
     }
 
     private fun render(p: ProgressState, bank: BankRepository.Bank?) {
-        val measured = p.answered > 0
+        val measured = Stats.answered(p) > 0
         binding.measured.isVisible = measured
         binding.empty.emptyState.isVisible = !measured
         if (!measured) return
 
         renderHero(p, bank)
-        binding.weekBars.setDays(Stats.weekWindow(p, DateUtils.today()))
+        binding.weekBars.setDays(Stats.weekWindow(p, LocalDate.now()))
         topicAdapter.submitList(bank?.let { Stats.topicStats(it.questions, p) }.orEmpty())
         renderMilestones(p, bank)
         renderMocks(p)
@@ -113,17 +114,19 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
             )
         }
 
-        binding.statAnswered.text = p.answered.toString()
+        binding.statAnswered.text = Stats.answered(p).toString()
         val bankSize = bank?.questions?.size ?: 0
         // Only ids the bank still carries count as seen, or a stale record inflates it.
         val seen = bank?.questions?.count { it.id in p.seen } ?: 0
         binding.statRemaining.text = (bankSize - seen).toString()
-        // A streak running right now has not been banked into `best` yet.
-        binding.statBest.text = max(p.best, p.streak).toString()
+        // Both are derived from the same day set, so the running streak can never
+        // exceed the best - but max() keeps the intent obvious at the call site.
+        binding.statBest.text =
+            max(Stats.bestStreak(p), Stats.streak(p, LocalDate.now())).toString()
     }
 
     private fun renderMilestones(p: ProgressState, bank: BankRepository.Bank?) {
-        val earned = Stats.achievements(bank?.questions.orEmpty(), p)
+        val earned = Stats.achievements(bank?.questions.orEmpty(), p, LocalDate.now())
         binding.milesCount.text = getString(
             R.string.progress_miles_count, earned.size, Stats.MILESTONES.size,
         )

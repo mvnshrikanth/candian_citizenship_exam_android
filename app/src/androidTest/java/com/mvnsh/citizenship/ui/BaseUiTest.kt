@@ -11,7 +11,10 @@ import com.mvnsh.citizenship.CitizenshipApp
 import com.mvnsh.citizenship.MainActivity
 import com.mvnsh.citizenship.R
 import com.mvnsh.citizenship.data.model.ProgressState
+import com.mvnsh.citizenship.data.model.SeenStat
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.concurrent.TimeUnit
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -110,6 +113,43 @@ abstract class BaseUiTest {
         }
         return id
     }
+
+    /**
+     * Builds `seen` records that derive to exactly [answered] answers, [correct] of them
+     * right, spread over [days] consecutive days ending today - so the streak is [days].
+     *
+     * Totals and the streak are no longer stored, so a test cannot simply assert them into
+     * existence; it has to seed the history they come from. That is the point of the
+     * refactor, and this keeps the seeding honest rather than reintroducing the fields.
+     */
+    protected fun seenRecords(
+        answered: Int,
+        correct: Int,
+        days: Int = 1,
+        questions: Int = answered,
+    ): Map<Int, SeenStat> {
+        require(questions in 1..answered) { "need 1..$answered questions, got $questions" }
+        require(days in 1..questions) { "need 1..$questions days, got $days" }
+
+        var attemptsLeft = answered
+        var missesLeft = answered - correct
+        return (0 until questions).associate { i ->
+            val remaining = questions - i
+            val s = if (i == questions - 1) attemptsLeft else (attemptsLeft / remaining).coerceAtLeast(1)
+            attemptsLeft -= s
+            val m = minOf(missesLeft, s)
+            missesLeft -= m
+            (i + 1) to SeenStat(s = s, m = m, lastAttempted = isoDaysAgo(i % days))
+        }
+    }
+
+    /** Midday, [daysAgo] days back, in the device's own zone - reliably that local day. */
+    protected fun isoDaysAgo(daysAgo: Int): String =
+        LocalDate.now().minusDays(daysAgo.toLong())
+            .atTime(12, 0)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toString()
 
     protected fun progress(): ProgressState = app().progressRepository.state.value
 

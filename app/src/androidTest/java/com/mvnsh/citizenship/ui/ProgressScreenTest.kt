@@ -43,8 +43,10 @@ class ProgressScreenTest : BaseUiTest() {
     @Test
     fun the_hero_card_reports_accuracy_and_a_readiness_verdict() = onProgress(
         ProgressState(
-            onboarded = true, answered = 100, correct = 88, best = 14,
-            seen = (1..40).associateWith { SeenStat(1, 0) },
+            onboarded = true,
+            // 40 distinct questions over 14 days: 88% accuracy, a 14-day streak, and
+            // 535 - 40 unseen.
+            seen = seenRecords(answered = 100, correct = 88, days = 14, questions = 40),
         ),
     ) {
         onView(withId(R.id.accuracy)).check(matches(withText("88%")))
@@ -63,22 +65,37 @@ class ProgressScreenTest : BaseUiTest() {
     fun the_verdict_steps_down_with_accuracy() {
         mapOf(90 to "Test ready", 78 to "Nearly there", 40 to "Keep practising")
             .forEach { (correct, verdict) ->
-                onProgress(ProgressState(onboarded = true, answered = 100, correct = correct)) {
+                onProgress(
+                    ProgressState(onboarded = true, seen = seenRecords(100, correct)),
+                ) {
                     onView(withText(verdict)).check(matches(isDisplayed()))
                 }
             }
     }
 
     @Test
-    fun a_streak_running_now_counts_as_the_best_even_before_it_is_banked() = onProgress(
-        ProgressState(onboarded = true, answered = 10, correct = 8, streak = 9, best = 4),
+    fun best_streak_is_the_longest_run_on_record_not_the_current_one() = onProgress(
+        // A four-day run a fortnight ago, then a single day today. Both are derived from
+        // the same day set, so "best" has to look back rather than trust a stored number.
+        ProgressState(
+            onboarded = true,
+            seen = mapOf(
+                1 to SeenStat(1, 0, isoDaysAgo(14)),
+                2 to SeenStat(1, 0, isoDaysAgo(13)),
+                3 to SeenStat(1, 0, isoDaysAgo(12)),
+                4 to SeenStat(1, 0, isoDaysAgo(11)),
+                5 to SeenStat(1, 0, isoDaysAgo(0)),
+            ),
+        ),
     ) {
-        onView(withId(R.id.stat_best)).check(matches(withText("9")))
+        onView(withId(R.id.stat_best)).check(matches(withText("4")))
     }
 
     @Test
     fun milestones_show_earned_and_unearned() = onProgress(
-        ProgressState(onboarded = true, answered = 60, correct = 50, streak = 4),
+        // Ten questions, not sixty: ids 1..10 are only law and rights, so "all 7
+        // topics" stays locked and the count is the three this test is about.
+        ProgressState(onboarded = true, seen = seenRecords(60, 50, days = 4, questions = 10)),
     ) {
         onView(withText("Milestones")).perform(scrollTo()).check(matches(isDisplayed()))
         // first, s3 and q50 are reached; the other five are not.
@@ -90,7 +107,7 @@ class ProgressScreenTest : BaseUiTest() {
 
     @Test
     fun by_topic_lists_all_seven_with_an_em_dash_for_the_untouched() = onProgress(
-        ProgressState(onboarded = true, answered = 5, correct = 4, seen = mapOf(1 to SeenStat(4, 1))),
+        ProgressState(onboarded = true, seen = mapOf(1 to SeenStat(4, 1, isoDaysAgo(0)))),
     ) {
         onView(withText("By topic")).perform(scrollTo()).check(matches(isDisplayed()))
         onView(allOf(withId(R.id.topic_accuracy), hasSibling(withText("Economy"))))
@@ -104,7 +121,7 @@ class ProgressScreenTest : BaseUiTest() {
     @Test
     fun mock_attempts_are_listed_newest_first() = onProgress(
         ProgressState(
-            onboarded = true, answered = 40, correct = 30,
+            onboarded = true, seen = seenRecords(40, 30),
             mocks = listOf(
                 MockAttempt(70, DateUtils.shiftDay(-9)),
                 MockAttempt(85, DateUtils.shiftDay(-1)),
@@ -119,7 +136,7 @@ class ProgressScreenTest : BaseUiTest() {
 
     @Test
     fun the_mock_card_is_hidden_until_a_mock_has_been_taken() =
-        onProgress(ProgressState(onboarded = true, answered = 40, correct = 30)) {
+        onProgress(ProgressState(onboarded = true, seen = seenRecords(40, 30))) {
             onView(withId(R.id.mocks_card))
                 .check(matches(withEffectiveVisibility(Visibility.GONE)))
         }
@@ -127,8 +144,7 @@ class ProgressScreenTest : BaseUiTest() {
     @Test
     fun the_week_chart_draws_seven_days_ending_today() = onProgress(
         ProgressState(
-            onboarded = true, answered = 20, correct = 15,
-            week = listOf(2, 4, 6, 3, 8, 1, 5), weekDate = DateUtils.today(),
+            onboarded = true, seen = seenRecords(20, 15, days = 5),
         ),
     ) {
         onView(withText("This week")).perform(scrollTo()).check(matches(isDisplayed()))

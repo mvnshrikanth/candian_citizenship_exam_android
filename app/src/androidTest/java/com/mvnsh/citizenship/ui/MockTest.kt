@@ -16,12 +16,14 @@ import com.mvnsh.citizenship.data.model.MockAttempt
 import com.mvnsh.citizenship.data.model.ProgressState
 import com.mvnsh.citizenship.data.model.SessionState
 import com.mvnsh.citizenship.domain.DateUtils
+import com.mvnsh.citizenship.domain.Stats
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.startsWith
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
 
 @RunWith(AndroidJUnit4::class)
 class MockTest : BaseUiTest() {
@@ -139,7 +141,7 @@ class MockTest : BaseUiTest() {
 
         onView(withText("Only government officials and politicians")).perform(scrollTo(), click())
         assertEquals(2, progress().session!!.marks[1])
-        assertEquals("a mock records nothing until submit", 0, progress().answered)
+        assertEquals("a mock records nothing until submit", 0, Stats.answered(progress()))
     }
 
     @Test
@@ -188,7 +190,11 @@ class MockTest : BaseUiTest() {
             onView(withText("You would have passed")).check(matches(isDisplayed()))
             onView(withId(R.id.score)).check(matches(withText("17")))
             onView(withId(R.id.score_of)).check(matches(withText("of 20 · 85%")))
-            assertEquals(listOf(MockAttempt(85, DateUtils.today())), progress().mocks)
+            // The attempt is stamped with an instant, matching what the web app writes,
+            // so assert the score and the day rather than a formatted string.
+            val attempt = progress().mocks.single()
+            assertEquals(85, attempt.pct)
+            assertEquals(LocalDate.now(), DateUtils.localDayOf(attempt.date))
         }
 
     @Test
@@ -212,8 +218,8 @@ class MockTest : BaseUiTest() {
             onView(withId(R.id.navigator)).perform(click())
             onView(withText(startsWith("Submit ("))).perform(click())
             val p = progress()
-            assertEquals(20, p.answered)
-            assertEquals(12, p.correct)
+            assertEquals(20, Stats.answered(p))
+            assertEquals(12, Stats.correct(p))
             // An unanswered question is marked wrong, as the real test would.
             assertEquals(8, p.seen.values.count { it.m > 0 })
         }

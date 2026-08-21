@@ -22,6 +22,7 @@ import com.mvnsh.citizenship.ui.common.Motion
 import com.mvnsh.citizenship.ui.common.applyTopInset
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalTime
 import kotlin.math.max
 import kotlin.math.min
@@ -77,11 +78,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val today = DateUtils.today()
 
         binding.greeting.setText(greetingRes())
+        val streak = Stats.streak(p, LocalDate.now())
         binding.dayLine.text =
-            if (p.streak > 0) getString(R.string.home_day_line, p.streak)
+            if (streak > 0) getString(R.string.home_day_line, streak)
             else getString(R.string.home_ready)
 
-        renderGoal(p, today)
+        renderGoal(p, today, streak)
         renderHero(p, session)
 
         binding.weakCount.text = StudyEngine.weakIds(p).size.toString()
@@ -93,7 +95,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         renderWeakestTopic(p, bank)
     }
 
-    private fun renderGoal(p: ProgressState, today: String) {
+    private fun renderGoal(p: ProgressState, today: String, streak: Int) {
         // goalDone belongs to goalDate. Until the next answer rolls it forward, a
         // yesterday-stamped counter means nothing has been done today.
         val done = if (p.goalDate == today) p.goalDone else 0
@@ -110,10 +112,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (left == 0) getString(R.string.home_goal_met)
             else getString(R.string.home_goal_left, left, minutesFor(left))
 
-        val hasStreak = p.streak > 0
+        val hasStreak = streak > 0
         binding.streakFlame.isVisible = hasStreak
         binding.streakText.isVisible = hasStreak
-        if (hasStreak) binding.streakText.text = getString(R.string.home_streak_days, p.streak)
+        if (hasStreak) binding.streakText.text = getString(R.string.home_streak_days, streak)
     }
 
     private fun renderHero(p: ProgressState, session: SessionState?) {

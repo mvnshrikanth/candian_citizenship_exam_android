@@ -8,8 +8,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.mvnsh.citizenship.CitizenshipApp
 import com.mvnsh.citizenship.data.BankRepository
+import com.mvnsh.citizenship.data.model.MockAttempt
 import com.mvnsh.citizenship.data.model.NotifPrefs
 import com.mvnsh.citizenship.data.model.ProgressState
+import com.mvnsh.citizenship.data.model.SeenStat
 import com.mvnsh.citizenship.data.model.SessionState
 import com.mvnsh.citizenship.domain.DateUtils
 import com.mvnsh.citizenship.domain.Stats
@@ -25,6 +27,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
 
 /**
@@ -161,9 +166,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         if (s.picked != null) return // already revealed, so the question is locked
 
         val correct = optionIndex == q.answer
-        val milestonesBefore = Stats.achievements(loaded.questions, progress.value).size
+        val milestonesBefore =
+            Stats.achievements(loaded.questions, progress.value, LocalDate.now()).size
         progressRepo.mutate { p ->
-            Stats.registerAnswer(p, q.id, correct, DateUtils.today(), DateUtils.shiftDay(-1)).copy(
+            Stats.registerAnswer(p, q.id, correct, DateUtils.nowIso(), DateUtils.today()).copy(
                 session = s.copy(
                     picked = optionIndex,
                     right = s.right + if (correct) 1 else 0,
@@ -177,7 +183,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     private fun announceProgress(milestonesBefore: Int) {
         val loaded = _bank.value ?: return
         val p = progress.value
-        val unlocked = Stats.achievements(loaded.questions, p)
+        val unlocked = Stats.achievements(loaded.questions, p, LocalDate.now())
         if (unlocked.size > milestonesBefore) {
             val label = Stats.MILESTONES.last { it.key in unlocked }.label
             toast("Milestone reached — $label")
@@ -209,7 +215,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
         progressRepo.mutate { p ->
             val (next, right) = Stats.registerMock(
-                p, s.ids, s.marks, loaded.byId, DateUtils.today(), DateUtils.shiftDay(-1),
+                p, s.ids, s.marks, loaded.byId, DateUtils.nowIso(),
             )
             val pct = if (s.ids.isEmpty()) 0 else (right * 100.0 / s.ids.size).roundToInt()
             next.copy(session = s.copy(submitted = true, finalRight = right, finalPct = pct))
@@ -318,25 +324,33 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     fun seedDemo() {
         val loaded = _bank.value ?: return
         viewModelScope.launch {
-            val seen = loaded.questions.take(340).mapIndexed { i, q ->
-                q.id to com.mvnsh.citizenship.data.model.SeenStat(
-                    s = 1 + if (i % 3 == 0) 1 else 0,
-                    m = if (i % 23 == 0) 2 else if (i % 6 == 0) 1 else 0,
+            // Totals and the streak are derived now, so the seed has to produce them
+            // rather than assert them: spreading lastAttempted over the last twelve days
+            // is what makes the demo show a twelve-day streak.
+            val now = Instant.now()
+            val seen = loaded.questions.take(DEMO_QUESTIONS).mapIndexed { i, q ->
+                val attempts = 1 + if (i % 3 == 0) 1 else 0
+                q.id to SeenStat(
+                    s = attempts,
+                    // Capped at the attempts: the totals are derived now, so a record
+                    // claiming more misses than tries would show up as negative accuracy.
+                    m = minOf(attempts, if (i % 23 == 0) 2 else if (i % 6 == 0) 1 else 0),
+                    lastAttempted = now.minus((i % DEMO_STREAK_DAYS).toLong(), ChronoUnit.DAYS)
+                        .toString(),
                 )
             }.toMap()
             progressRepo.replace(
                 ProgressState(
-                    onboarded = true, answered = 340, correct = 279, seen = seen,
+                    onboarded = true,
+                    seen = seen,
                     mocks = listOf(
-                        com.mvnsh.citizenship.data.model.MockAttempt(70, DateUtils.shiftDay(-9)),
-                        com.mvnsh.citizenship.data.model.MockAttempt(80, DateUtils.shiftDay(-4)),
-                        com.mvnsh.citizenship.data.model.MockAttempt(85, DateUtils.shiftDay(-1)),
+                        MockAttempt(70, now.minus(9, ChronoUnit.DAYS).toString()),
+                        MockAttempt(80, now.minus(4, ChronoUnit.DAYS).toString()),
+                        MockAttempt(85, now.minus(1, ChronoUnit.DAYS).toString()),
                     ),
                     bookmarks = listOf(2, 7, 10, 44, 120),
                     goalTarget = 20, goalDone = 14, goalDate = DateUtils.today(),
-                    streak = 12, best = 14, lastDay = DateUtils.shiftDay(-1),
                     testDate = DateUtils.shiftDay(38),
-                    week = listOf(12, 16, 20, 18, 22, 14, 14), weekDate = DateUtils.today(),
                 ),
             )
             toast("Demo data loaded")
@@ -363,6 +377,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     companion object {
         private const val TIMER_TICK_MS = 500L
+
+        /** Demo dataset size, and the spread of days it covers. */
+        private const val DEMO_QUESTIONS = 340
+        private const val DEMO_STREAK_DAYS = 12
     }
 }
 

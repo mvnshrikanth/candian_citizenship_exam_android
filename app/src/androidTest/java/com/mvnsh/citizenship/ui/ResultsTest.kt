@@ -28,10 +28,12 @@ class ResultsTest : BaseUiTest() {
         right: Int,
         goalTarget: Int = 20,
         goalDone: Int = 2,
-        streak: Int = 0,
+        streakDays: Int = 0,
     ) = ProgressState(
         onboarded = true,
-        goalTarget = goalTarget, goalDone = goalDone, goalDate = DateUtils.today(), streak = streak,
+        goalTarget = goalTarget, goalDone = goalDone, goalDate = DateUtils.today(),
+        // The streak is derived, so it has to come from real answered days.
+        seen = if (streakDays == 0) emptyMap() else seenRecords(streakDays, streakDays, streakDays),
         session = SessionState(
             mode = "QUICK", label = "Quick practice", ids = listOf(1, 2),
             index = 1, marks = marks, right = right, submitted = true, finalRight = right,
@@ -89,7 +91,7 @@ class ResultsTest : BaseUiTest() {
 
     @Test
     fun a_met_goal_is_called_out() = inResults(
-        finished(mapOf(1 to 0, 2 to 0), right = 2, goalTarget = 20, goalDone = 20, streak = 5),
+        finished(mapOf(1 to 0, 2 to 0), right = 2, goalTarget = 20, goalDone = 20, streakDays = 5),
     ) {
         onView(withText("Daily goal met · 5-day streak safe")).check(matches(isDisplayed()))
     }

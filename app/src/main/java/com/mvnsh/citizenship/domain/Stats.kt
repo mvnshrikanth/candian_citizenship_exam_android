@@ -7,10 +7,19 @@ import com.mvnsh.citizenship.data.model.SeenStat
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
-import kotlin.math.max
 import kotlin.math.roundToInt
 
-/** Everything derived from stored progress: accuracy, topic breakdown, streak, milestones. */
+/**
+ * Everything derived from stored progress: totals, accuracy, topic breakdown, the streak,
+ * the weekly chart and the milestones.
+ *
+ * **Nothing here is stored.** Every figure is computed from `ProgressState.seen`, which is
+ * the same map the web app keeps in Firestore, using the same rules the web app uses. That
+ * is what lets one account show the same streak and the same totals on both platforms. An
+ * earlier version of this app kept `answered`, `correct`, `streak`, `best` and a rolling
+ * `week` array as fields; they are gone, because two devices maintaining their own copies
+ * of the same counters is exactly how they drift apart.
+ */
 object Stats {
 
     data class Milestone(val key: String, val label: String)
@@ -33,6 +42,8 @@ object Stats {
     /** Below this topic accuracy, the topic is flagged as one to work on. */
     private const val WEAKISH_PCT = 70
 
+    private const val WEEK_DAYS = 7
+
     data class TopicStat(
         val key: String,
         val name: String,
@@ -50,8 +61,95 @@ object Stats {
 
     data class DayCount(val date: String, val count: Int, val label: String)
 
-    fun accuracy(p: ProgressState): Int =
-        if (p.answered == 0) 0 else (p.correct * 100.0 / p.answered).roundToInt()
+    // ---- totals ---------------------------------------------------------
+
+    /** Every answer ever given, across all questions. */
+    fun answered(p: ProgressState): Int = p.seen.values.sumOf { it.s }
+
+    /** Every correct answer. A miss is recorded per attempt, so this is attempts - misses. */
+    fun correct(p: ProgressState): Int = p.seen.values.sumOf { it.s - it.m }
+
+    fun accuracy(p: ProgressState): Int {
+        val total = answered(p)
+        return if (total == 0) 0 else (correct(p) * 100.0 / total).roundToInt()
+    }
+
+    /** Questions touched at least once - the web app's "attempted". */
+    fun seenCount(p: ProgressState): Int = p.seen.count { it.value.s > 0 }
+
+    // ---- days, streak, week --------------------------------------------
+
+    /**
+     * The distinct local days on which something was answered.
+     *
+     * Derived from each question's `lastAttempted`, which is what the web app does. Note
+     * the consequence, because it is not obvious and it is shared by both platforms: a
+     * question only remembers its *most recent* attempt, so re-answering an old question
+     * moves its day forward and the day it used to occupy disappears unless another
+     * question still points at it. A streak can therefore shrink retroactively. Matching
+     * the web exactly was the explicit goal; fixing it means changing both apps and the
+     * schema together, not this function alone.
+     */
+    fun studyDays(p: ProgressState): Set<LocalDate> =
+        p.seen.values.mapNotNullTo(HashSet()) { DateUtils.localDayOf(it.lastAttempted) }
+
+    /**
+     * Consecutive days ending today. Zero if nothing was answered today, which is the
+     * web's rule.
+     */
+    fun streak(p: ProgressState, today: LocalDate): Int {
+        val days = studyDays(p)
+        var count = 0
+        var cursor = today
+        while (cursor in days) {
+            count++
+            cursor = cursor.minusDays(1)
+        }
+        return count
+    }
+
+    /**
+     * The longest run of consecutive study days on record.
+     *
+     * Android-only: the web has no concept of a best streak. Derived rather than stored so
+     * it cannot disagree with [streak], and so it survives a device change.
+     */
+    fun bestStreak(p: ProgressState): Int {
+        val days = studyDays(p).sorted()
+        if (days.isEmpty()) return 0
+
+        var best = 1
+        var run = 1
+        for (i in 1 until days.size) {
+            run = if (days[i - 1].plusDays(1) == days[i]) run + 1 else 1
+            if (run > best) best = run
+        }
+        return best
+    }
+
+    /**
+     * The seven days ending today, each labelled with its day-of-week initial.
+     *
+     * The count is **questions last attempted that day**, not answers given that day -
+     * again matching the web, whose chart is built the same way.
+     */
+    fun weekWindow(p: ProgressState, today: LocalDate): List<DayCount> {
+        val perDay = p.seen.values
+            .mapNotNull { DateUtils.localDayOf(it.lastAttempted) }
+            .groupingBy { it }
+            .eachCount()
+
+        return (0 until WEEK_DAYS).map { i ->
+            val date = today.minusDays((WEEK_DAYS - 1 - i).toLong())
+            DayCount(
+                date = date.toString(),
+                count = perDay[date] ?: 0,
+                label = date.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.CANADA).take(1),
+            )
+        }
+    }
+
+    // ---- topics and milestones -----------------------------------------
 
     fun topicStats(bank: List<Question>, p: ProgressState): List<TopicStat> =
         Topics.all.map { topic ->
@@ -85,39 +183,50 @@ object Stats {
         return p.seen.keys.mapNotNullTo(HashSet()) { byId[it]?.topic }.size
     }
 
-    fun achievements(bank: List<Question>, p: ProgressState): Set<String> = buildSet {
-        if (p.answered > 0) add("first")
-        if (p.streak >= 3) add("s3")
-        if (p.answered >= 50) add("q50")
-        if (p.streak >= 7) add("s7")
-        if (p.answered >= 200) add("q200")
-        if (p.mocks.isNotEmpty()) add("mock1")
-        if (p.mocks.any { it.pct >= PASS_PCT }) add("pass")
-        if (touchedTopics(bank, p) >= Topics.all.size) add("all7")
-    }
+    fun achievements(bank: List<Question>, p: ProgressState, today: LocalDate): Set<String> =
+        buildSet {
+            val total = answered(p)
+            val run = streak(p, today)
+            if (total > 0) add("first")
+            if (run >= 3) add("s3")
+            if (total >= 50) add("q50")
+            if (run >= 7) add("s7")
+            if (total >= 200) add("q200")
+            if (p.mocks.isNotEmpty()) add("mock1")
+            if (p.mocks.any { it.pct >= PASS_PCT }) add("pass")
+            if (touchedTopics(bank, p) >= Topics.all.size) add("all7")
+        }
 
+    // ---- recording ------------------------------------------------------
+
+    /**
+     * Records one answer.
+     *
+     * Only two things change: the question's own record, and the daily goal counter. The
+     * totals and the streak follow from [seen] and need no maintenance, which is the whole
+     * point - there is no counter left to increment twice or forget to reset.
+     */
     fun registerAnswer(
         p: ProgressState,
         questionId: Int,
         correct: Boolean,
+        nowIso: String,
         today: String,
-        yesterday: String,
     ): ProgressState {
         val rec = p.seen[questionId] ?: SeenStat()
-        val seen = p.seen + (questionId to SeenStat(s = rec.s + 1, m = rec.m + if (correct) 0 else 1))
+        val seen = p.seen + (
+            questionId to SeenStat(
+                s = rec.s + 1,
+                m = rec.m + if (correct) 0 else 1,
+                lastAttempted = nowIso,
+            )
+            )
 
         val goalIsStale = p.goalDate != today
-        val week = rollWeek(p.week, p.weekDate, today).toMutableList()
-        week[6] = week[6] + 1
-
-        return advanceDay(p, today, yesterday).copy(
+        return p.copy(
             seen = seen,
-            answered = p.answered + 1,
-            correct = p.correct + if (correct) 1 else 0,
             goalDate = today,
             goalDone = if (goalIsStale) 1 else p.goalDone + 1,
-            week = week,
-            weekDate = today,
         )
     }
 
@@ -127,8 +236,7 @@ object Stats {
         ids: List<Int>,
         marks: Map<Int, Int>,
         byId: Map<Int, Question>,
-        today: String,
-        yesterday: String,
+        nowIso: String,
     ): Pair<ProgressState, Int> {
         val right = ids.count { id -> marks[id] != null && marks[id] == byId[id]?.answer }
         val pct = if (ids.isEmpty()) 0 else (right * 100.0 / ids.size).roundToInt()
@@ -138,64 +246,17 @@ object Stats {
             val rec = seen[id] ?: SeenStat()
             // An unanswered question counts as missed; the real test marks it wrong too.
             val wrong = marks[id] == null || marks[id] != byId[id]?.answer
-            seen[id] = SeenStat(s = rec.s + 1, m = rec.m + if (wrong) 1 else 0)
+            seen[id] = SeenStat(
+                s = rec.s + 1,
+                m = rec.m + if (wrong) 1 else 0,
+                lastAttempted = nowIso,
+            )
         }
 
-        val out = advanceDay(p, today, yesterday).copy(
+        val out = p.copy(
             seen = seen,
-            mocks = p.mocks + MockAttempt(pct = pct, date = today),
-            answered = p.answered + ids.size,
-            correct = p.correct + right,
+            mocks = p.mocks + MockAttempt(pct = pct, date = nowIso),
         )
         return out to right
     }
-
-    /**
-     * Rolls the stored seven-day window forward so its last slot is [today].
-     *
-     * The design kept a fixed seven-slot array, always incremented slot 6 and labelled
-     * the slots "M T W T F S S", so the bars never moved and the labels were wrong six
-     * days out of seven. Anchoring to a date fixes both.
-     */
-    fun rollWeek(week: List<Int>, from: String, today: String): List<Int> {
-        val counts = week.normalisedTo7()
-        if (from.isBlank() || from == today) return counts
-
-        val gap = runCatching {
-            (LocalDate.parse(today).toEpochDay() - LocalDate.parse(from).toEpochDay()).toInt()
-        }.getOrDefault(0)
-
-        return when {
-            gap <= 0 -> counts // clock moved backwards; leave the window alone
-            gap >= 7 -> List(7) { 0 }
-            else -> counts.drop(gap) + List(gap) { 0 }
-        }
-    }
-
-    /** The seven days ending today, each labelled with its own day-of-week initial. */
-    fun weekWindow(p: ProgressState, today: String): List<DayCount> {
-        val counts = rollWeek(p.week, p.weekDate, today)
-        val end = LocalDate.parse(today)
-        return counts.mapIndexed { i, n ->
-            val date = end.minusDays((6 - i).toLong())
-            DayCount(
-                date = date.toString(),
-                count = n,
-                label = date.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.CANADA).take(1),
-            )
-        }
-    }
-
-    /**
-     * The streak's three branches in one place: a consecutive day extends it, a gap
-     * restarts it at one, and a second visit on the same day changes nothing.
-     */
-    private fun advanceDay(p: ProgressState, today: String, yesterday: String): ProgressState {
-        if (p.lastDay == today) return p
-        val streak = if (p.lastDay == yesterday) p.streak + 1 else 1
-        return p.copy(streak = streak, lastDay = today, best = max(p.best, streak))
-    }
-
-    private fun List<Int>.normalisedTo7(): List<Int> =
-        if (size == 7) this else (this + List(7) { 0 }).take(7)
 }

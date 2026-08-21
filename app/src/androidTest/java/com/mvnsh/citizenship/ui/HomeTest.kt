@@ -27,7 +27,7 @@ class HomeTest : BaseUiTest() {
     fun the_goal_card_shows_progress_towards_the_target() = withProgress(
         ProgressState(
             onboarded = true, goalTarget = 20, goalDone = 14, goalDate = DateUtils.today(),
-            streak = 12, answered = 340, correct = 279,
+            seen = seenRecords(answered = 340, correct = 279, days = 12),
         ),
     ) {
         onView(withText("Today's goal")).check(matches(isDisplayed()))
@@ -70,7 +70,8 @@ class HomeTest : BaseUiTest() {
     @Test
     fun with_a_test_date_the_countdown_shows_days_remaining() = withProgress(
         ProgressState(
-            onboarded = true, testDate = DateUtils.shiftDay(38), answered = 100, correct = 85,
+            onboarded = true, testDate = DateUtils.shiftDay(38),
+            seen = seenRecords(answered = 100, correct = 85),
         ),
     ) {
         onView(withId(R.id.days_left)).check(matches(withText("38")))

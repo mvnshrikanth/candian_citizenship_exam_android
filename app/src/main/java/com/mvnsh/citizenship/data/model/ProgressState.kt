@@ -3,10 +3,22 @@ package com.mvnsh.citizenship.data.model
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-/** Attempts and misses for one question. Missing it twice puts it on the weak list. */
+/**
+ * Attempts and misses for one question. Missing it twice puts it on the weak list.
+ *
+ * [lastAttempted] is an ISO-8601 UTC instant and is the field the streak and the weekly
+ * chart are derived from, on this platform and on the web. It is nullable because blobs
+ * written before sync existed have no timestamp; those records still count towards totals,
+ * they simply cannot contribute a day.
+ */
 @Serializable
-data class SeenStat(val s: Int = 0, val m: Int = 0)
+data class SeenStat(
+    val s: Int = 0,
+    val m: Int = 0,
+    val lastAttempted: String? = null,
+)
 
+/** [date] is an ISO-8601 UTC instant, matching what the web app records. */
 @Serializable
 data class MockAttempt(val pct: Int, val date: String)
 
@@ -47,32 +59,29 @@ data class SessionState(
 /**
  * Everything the app remembers, stored as one JSON blob in DataStore.
  *
- * Defaults are not encoded, so a fresh install's blob is "{}" and only real progress
- * grows the file. Unknown keys are ignored so a newer build's blob still loads.
+ * Totals, streak and the weekly chart are deliberately **not** fields. They are derived
+ * from [seen] by `Stats`, using the same rule the web app uses, so the two platforms can
+ * never disagree about the same account. Storing them was how they drifted.
+ *
+ * Defaults are not encoded, so a fresh install's blob is "{}" and only real progress grows
+ * the file. Unknown keys are ignored, so a blob written by an older build - which did carry
+ * `answered`, `streak`, `week` and friends - still loads, and those stale values are simply
+ * dropped in favour of the derivation.
  */
 @Serializable
 data class ProgressState(
     val onboarded: Boolean = false,
-    val answered: Int = 0,
-    val correct: Int = 0,
     val seen: Map<Int, SeenStat> = emptyMap(),
     val mocks: List<MockAttempt> = emptyList(),
     val bookmarks: List<Int> = emptyList(),
     val goalTarget: Int = 20,
     val goalDone: Int = 0,
     val goalDate: String = "",
-    val streak: Int = 0,
-    val best: Int = 0,
-    val lastDay: String? = null,
     val testDate: String? = null,
     val notif: NotifPrefs = NotifPrefs(),
     val theme: String = "System",
-    /** Seven daily answer counts ending on [weekDate]. See Stats.rollWeek. */
-    val week: List<Int> = listOf(0, 0, 0, 0, 0, 0, 0),
-    /** Anchor date for [week]; blank on a blob written before the window rolled. */
-    val weekDate: String = "",
     val session: SessionState? = null,
-    val schemaVersion: Int = 1,
+    val schemaVersion: Int = 2,
 ) {
     companion object {
         private val json = Json {
