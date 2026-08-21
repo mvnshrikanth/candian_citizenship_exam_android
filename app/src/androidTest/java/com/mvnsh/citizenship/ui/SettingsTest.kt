@@ -5,11 +5,13 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.GrantPermissionRule
 import com.mvnsh.citizenship.R
 import com.mvnsh.citizenship.data.model.MockAttempt
 import com.mvnsh.citizenship.data.model.ProgressState
@@ -18,6 +20,7 @@ import com.mvnsh.citizenship.domain.DateUtils
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.After
+import org.junit.Rule
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -26,6 +29,25 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class SettingsTest : BaseUiTest() {
+
+    /**
+     * Turning a reminder on asks for POST_NOTIFICATIONS, and a real system dialog pauses
+     * the activity - which fails not just that test but every test queued behind it, with
+     * a NoActivityResumedException that says nothing about notifications. Pre-granting
+     * makes the launcher return without UI.
+     */
+    @get:Rule
+    val notifications: GrantPermissionRule =
+        GrantPermissionRule.grant("android.permission.POST_NOTIFICATIONS")
+
+    /**
+     * A grouped-list row addressed by the row itself rather than by its label.
+     *
+     * The label is a non-clickable child, so clicking it relies on the touch bubbling to
+     * the row; naming the row removes the question of which view actually received it.
+     */
+    private fun settingRow(label: String) =
+        allOf(withId(R.id.setting_row), hasDescendant(withText(label)))
 
     private fun inSettings(state: ProgressState, block: () -> Unit) = withProgress(state) {
         navigateTo(R.id.settingsFragment)
@@ -103,11 +125,12 @@ class SettingsTest : BaseUiTest() {
             mocks = listOf(MockAttempt(85, DateUtils.today())),
         ),
     ) {
-        onView(withText("Reset all progress")).perform(scrollTo(), click())
+        onView(settingRow("Reset all progress")).perform(scrollTo(), click())
         onView(withText("Reset all progress?")).check(matches(isDisplayed()))
         onView(withText(containsString("Bookmarks are kept"))).check(matches(isDisplayed()))
         onView(withText("Reset everything")).perform(click())
 
+        awaitProgress { it.answered == 0 }
         val p = progress()
         assertEquals(0, p.answered)
         assertEquals(0, p.streak)
@@ -120,7 +143,7 @@ class SettingsTest : BaseUiTest() {
     @Test
     fun cancelling_reset_changes_nothing() =
         inSettings(ProgressState(onboarded = true, answered = 340)) {
-            onView(withText("Reset all progress")).perform(scrollTo(), click())
+            onView(settingRow("Reset all progress")).perform(scrollTo(), click())
             onView(withText("Cancel")).perform(click())
             assertEquals(340, progress().answered)
         }
@@ -129,7 +152,7 @@ class SettingsTest : BaseUiTest() {
     fun clearing_bookmarks_leaves_progress_alone() = inSettings(
         ProgressState(onboarded = true, answered = 50, bookmarks = listOf(1, 2, 3)),
     ) {
-        onView(withText("Clear bookmarks")).perform(scrollTo(), click())
+        onView(settingRow("Clear bookmarks")).perform(scrollTo(), click())
         onView(withText("Clear them")).perform(click())
         assertTrue(progress().bookmarks.isEmpty())
         assertEquals(50, progress().answered)
@@ -140,7 +163,7 @@ class SettingsTest : BaseUiTest() {
         inSettings(ProgressState(onboarded = true)) {
             onView(withText("Question bank downloaded")).perform(scrollTo())
                 .check(matches(isDisplayed()))
-            onView(withText("501 questions · works offline")).perform(scrollTo())
+            onView(withText("535 questions · works offline")).perform(scrollTo())
                 .check(matches(isDisplayed()))
             onView(withText("Everything stays on device")).perform(scrollTo())
                 .check(matches(isDisplayed()))
@@ -154,15 +177,16 @@ class SettingsTest : BaseUiTest() {
     @Test
     fun the_debug_only_seeder_produces_a_usable_dataset() =
         inSettings(ProgressState(onboarded = true)) {
-            onView(withText("Load demo data")).perform(scrollTo(), click())
+            onView(settingRow("Load demo data")).perform(scrollTo(), click())
+            awaitProgress { it.answered == 340 }
             val p = progress()
             assertEquals(340, p.answered)
             assertEquals(279, p.correct)
             assertEquals(3, p.mocks.size)
             assertEquals(listOf(2, 7, 10, 44, 120), p.bookmarks)
 
-            onView(withText("Reset to fresh install")).perform(scrollTo(), click())
-            assertEquals(0, progress().answered)
+            onView(settingRow("Reset to fresh install")).perform(scrollTo(), click())
+            awaitProgress { it.answered == 0 }
             assertFalse("a fresh install has not been onboarded", progress().onboarded)
         }
 }

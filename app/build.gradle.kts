@@ -75,4 +75,7 @@ dependencies {
     androidTestImplementation(libs.test.core)
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.monitor)
+    // GrantPermissionRule: pre-grants POST_NOTIFICATIONS so the settings tests
+    // never raise a real system dialog, which pauses the activity mid-suite.
+    androidTestImplementation(libs.test.rules)
 }
