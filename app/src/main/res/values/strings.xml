@@ -16,4 +16,40 @@
     <!-- Notification channel -->
     <string name="channel_reminders">Study reminders</string>
     <string name="channel_reminders_desc">Daily nudges, streak warnings and test-date countdowns.</string>
+
+    <!-- Onboarding, verbatim from the design except ob_feature_offline (see below). -->
+    <string name="ob_title_1">Pass the citizenship test.</string>
+    <string name="ob_body_1">Short daily practice on the real question bank, with the questions you keep missing brought back to you.</string>
+    <string name="ob_feature_bank">%1$d questions across seven topics</string>
+    <!-- The design says "Works offline once downloaded". The bank is a bundled asset
+         here, so there is no download to wait for and that wording would be false. -->
+    <string name="ob_feature_offline">Works offline from the very first question</string>
+    <string name="ob_feature_mock">Timed mock tests, marked like the real one</string>
+    <string name="ob_cta_1">Get started</string>
+    <string name="ob_used_before">I\'ve used this before</string>
+
+    <string name="ob_title_2">Set a pace</string>
+    <string name="ob_body_2">Both optional. You can change them any time in settings.</string>
+    <string name="ob_label_when">When is your test?</string>
+    <string name="ob_date_month">In about a month</string>
+    <string name="ob_date_quarter">In about 3 months</string>
+    <string name="ob_date_none">Not scheduled yet</string>
+    <string name="ob_label_goal">Daily goal</string>
+    <string name="ob_goal_10">10 a day</string>
+    <string name="ob_goal_20">20 a day</string>
+    <string name="ob_goal_30">30 a day</string>
+    <string name="ob_cta_2">Continue</string>
+    <string name="ob_skip">Skip for now</string>
+
+    <string name="ob_title_3">How this works</string>
+    <string name="ob_step1_title">Practise a little, daily</string>
+    <string name="ob_step1_body">Ten minutes beats an hour on Sunday. Your goal and streak are there to make the habit visible, nothing more.</string>
+    <string name="ob_step2_title">Missed questions come back</string>
+    <string name="ob_step2_body">Anything you get wrong twice joins your weak list and returns more often until it sticks.</string>
+    <string name="ob_step3_title">Mock test when you\'re ready</string>
+    <string name="ob_step3_body">Twenty questions, thirty minutes, fifteen to pass — the same shape as the real test.</string>
+    <string name="ob_cta_3">Start studying</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">Go back</string>
 </resources>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/page_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:paddingStart="@dimen/onboard_pad_h"
+    android:paddingEnd="@dimen/onboard_pad_h"
+    android:paddingTop="@dimen/onboard_pad_top"
+    android:paddingBottom="@dimen/onboard_pad_bottom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ob_how_back"
+            style="@style/Button.IconCircle"
+            android:layout_gravity="start"
+            android:contentDescription="@string/cd_back"
+            app:icon="@drawable/ic_arrow_left"
+            app:iconTint="@color/md_on_surface"
+            app:backgroundTint="@android:color/transparent" />
+
+        <TextView
+            style="@style/Text.Headline.Section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/ob_title_3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text.Stat.S"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_step_circle"
+                android:gravity="center"
+                android:textColor="@color/md_on_primary_container"
+                android:text="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Text.Title.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16.5sp"
+                    android:text="@string/ob_step1_title" />
+
+                <TextView
+                    style="@style/Text.Body.Loose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/md_on_surface_variant"
+                    android:text="@string/ob_step1_body" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text.Stat.S"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_step_circle"
+                android:gravity="center"
+                android:textColor="@color/md_on_primary_container"
+                android:text="2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Text.Title.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16.5sp"
+                    android:text="@string/ob_step2_title" />
+
+                <TextView
+                    style="@style/Text.Body.Loose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/md_on_surface_variant"
+                    android:text="@string/ob_step2_body" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text.Stat.S"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_step_circle"
+                android:gravity="center"
+                android:textColor="@color/md_on_primary_container"
+                android:text="3" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Text.Title.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16.5sp"
+                    android:text="@string/ob_step3_title" />
+
+                <TextView
+                    style="@style/Text.Body.Loose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/md_on_surface_variant"
+                    android:text="@string/ob_step3_body" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ob_how_finish"
+            style="@style/Button.Cta.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/ob_cta_3" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

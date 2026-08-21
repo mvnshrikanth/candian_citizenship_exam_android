@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/page_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/onboard_pad_h"
+    android:paddingEnd="@dimen/onboard_pad_h"
+    android:paddingTop="@dimen/onboard_pad_top"
+    android:paddingBottom="@dimen/onboard_pad_bottom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_app_glyph" />
+
+        <TextView
+            android:id="@+id/ob_title"
+            style="@style/Text.Display.Hero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/ob_title_1" />
+
+        <TextView
+            style="@style/Text.Body.Loose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textSize="16sp"
+            android:textColor="@color/md_on_surface_variant"
+            android:text="@string/ob_body_1" />
+
+        <TextView
+            android:id="@+id/feature_bank"
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:drawableStart="@drawable/ic_check"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/md_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_check"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/md_secondary"
+            android:textSize="14sp"
+            android:text="@string/ob_feature_offline" />
+
+        <TextView
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_check"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/md_secondary"
+            android:textSize="14sp"
+            android:text="@string/ob_feature_mock" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ob_welcome_next"
+        style="@style/Button.Cta.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ob_cta_1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ob_welcome_used_before"
+        style="@style/Button.Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/ob_used_before" />
+</LinearLayout>

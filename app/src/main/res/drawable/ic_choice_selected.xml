@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Selected choice marker: a filled disc with a check, sized like the unselected ring. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp" android:height="20dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path
+        android:fillColor="@color/md_on_primary_container"
+        android:pathData="M12,2a10,10 0,1 0,0 20a10,10 0,1 0,0 -20z" />
+    <path
+        android:pathData="M7,12.5l3.2,3.2 6.3,-7"
+        android:strokeColor="@color/md_primary_container"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent" />
+</vector>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/page_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:paddingStart="@dimen/onboard_pad_h"
+    android:paddingEnd="@dimen/onboard_pad_h"
+    android:paddingTop="@dimen/onboard_pad_top"
+    android:paddingBottom="@dimen/onboard_pad_bottom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ob_pace_back"
+            style="@style/Button.IconCircle"
+            android:layout_gravity="start"
+            android:contentDescription="@string/cd_back"
+            app:icon="@drawable/ic_arrow_left"
+            app:iconTint="@color/md_on_surface"
+            app:backgroundTint="@android:color/transparent" />
+
+        <TextView
+            style="@style/Text.Headline.Section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/ob_title_2" />
+
+        <TextView
+            style="@style/Text.Body.Loose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="15sp"
+            android:textColor="@color/md_on_surface_variant"
+            android:text="@string/ob_body_2" />
+
+        <TextView
+            style="@style/Text.Overline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:textSize="13sp"
+            android:letterSpacing="0.05"
+            android:text="@string/ob_label_when" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/date_month"
+        style="@style/Card.Bordered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="@dimen/touch_min">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/pad_card">
+
+            <ImageView
+                android:id="@+id/date_month_mark"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="12dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/bg_choice_ring" />
+
+            <TextView
+                android:id="@+id/date_month_label"
+                style="@style/Text.Option"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ob_date_month" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/date_quarter"
+        style="@style/Card.Bordered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="@dimen/touch_min">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/pad_card">
+
+            <ImageView
+                android:id="@+id/date_quarter_mark"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="12dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/bg_choice_ring" />
+
+            <TextView
+                android:id="@+id/date_quarter_label"
+                style="@style/Text.Option"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ob_date_quarter" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/date_none"
+        style="@style/Card.Bordered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="@dimen/touch_min">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/pad_card">
+
+            <ImageView
+                android:id="@+id/date_none_mark"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="12dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/bg_choice_ring" />
+
+            <TextView
+                android:id="@+id/date_none_label"
+                style="@style/Text.Option"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ob_date_none" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+        <TextView
+            style="@style/Text.Overline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:textSize="13sp"
+            android:letterSpacing="0.05"
+            android:text="@string/ob_label_goal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/goal_10"
+            style="@style/Card.Bordered"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="9dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="@dimen/touch_min">
+
+            <TextView
+                android:id="@+id/goal_10_label"
+                style="@style/Text.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textSize="14.5sp"
+                android:text="@string/ob_goal_10" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/goal_20"
+            style="@style/Card.Bordered"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="9dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="@dimen/touch_min">
+
+            <TextView
+                android:id="@+id/goal_20_label"
+                style="@style/Text.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textSize="14.5sp"
+                android:text="@string/ob_goal_20" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/goal_30"
+            style="@style/Card.Bordered"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="9dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="@dimen/touch_min">
+
+            <TextView
+                android:id="@+id/goal_30_label"
+                style="@style/Text.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textSize="14.5sp"
+                android:text="@string/ob_goal_30" />
+        </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ob_pace_next"
+            style="@style/Button.Cta.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/ob_cta_2" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ob_pace_skip"
+            style="@style/Button.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ob_skip" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
